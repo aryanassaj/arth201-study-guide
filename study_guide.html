@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARTH201 Master Study Guide</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#1a1a2e;color:#ddd;line-height:1.6}
+a{color:#e94560;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;background:#0f0f23;border-bottom:2px solid #e94560;z-index:1000;padding:8px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+nav .brand{color:#e94560;font-weight:bold;font-size:1.1em;white-space:nowrap}
+nav a{color:#aaa;font-size:.85em;padding:4px 8px;border-radius:4px;white-space:nowrap}
+nav a:hover{background:rgba(233,69,96,.15);color:#e94560;text-decoration:none}
+nav .search-wrap{margin-left:auto}
+nav input{background:#16213e;border:1px solid #333;color:#eee;padding:5px 12px;border-radius:4px;font-size:.85em;width:200px}
+
+/* MAIN */
+main{max-width:1200px;margin:0 auto;padding:80px 20px 40px}
+
+/* SECTIONS */
+.period-section{margin-bottom:40px;border-left:4px solid #555;padding-left:20px;border-radius:2px}
+.period-section.medieval{border-color:#ffa500}
+.period-section.northern{border-color:#00bfff}
+.period-section.early-ren{border-color:#32cd32}
+.period-section.high-ren{border-color:#9370db}
+.period-section.mannerism{border-color:#ff69b4}
+.period-section.baroque{border-color:#ffd700}
+.period-section.special{border-color:#e94560}
+
+.section-header{cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 0;user-select:none}
+.section-header:hover{opacity:.85}
+.section-header h2{font-size:1.4em;margin:0}
+.section-header .toggle{font-size:1.2em;color:#666;transition:transform .2s}
+.section-header .toggle.open{transform:rotate(90deg)}
+.section-content{overflow:hidden;transition:max-height .3s ease}
+.section-content.collapsed{display:none}
+
+.period-tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.7em;font-weight:bold;vertical-align:middle}
+.tag-medieval{background:rgba(255,165,0,.15);color:#ffa500;border:1px solid #ffa500}
+.tag-northern{background:rgba(0,191,255,.15);color:#00bfff;border:1px solid #00bfff}
+.tag-early-ren{background:rgba(50,205,50,.15);color:#32cd32;border:1px solid #32cd32}
+.tag-high-ren{background:rgba(147,112,219,.15);color:#9370db;border:1px solid #9370db}
+.tag-mannerism{background:rgba(255,105,180,.15);color:#ff69b4;border:1px solid #ff69b4}
+.tag-baroque{background:rgba(255,215,0,.15);color:#ffd700;border:1px solid #ffd700}
+
+/* KEY CONCEPT */
+.key-concept{background:rgba(233,69,96,.08);border:1px solid rgba(233,69,96,.3);border-radius:8px;padding:12px 16px;margin:10px 0 16px;font-size:.95em}
+.key-concept strong{color:#e94560}
+
+/* SUBSECTION */
+h3{color:#aaa;font-size:1.05em;margin:20px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+h4{color:#ccc;margin:12px 0 6px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:10px 0 20px;border-radius:8px;border:1px solid #2a2a4a}
+table{width:100%;border-collapse:collapse;font-size:.85em}
+thead{position:sticky;top:0;z-index:5}
+th{background:#16213e;color:#e94560;padding:10px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:2px solid #e94560}
+td{padding:8px;border-bottom:1px solid #2a2a4a;vertical-align:top}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+tr:hover{background:rgba(233,69,96,.06)}
+td:nth-child(2){font-weight:bold;color:#fff}
+td:nth-child(3){font-style:italic;color:#ccc}
+td:last-child{color:#aaa;font-size:.9em}
+
+/* PATTERN BOX */
+.pattern-box{background:rgba(255,255,255,.03);border:1px solid #2a2a4a;border-radius:8px;padding:16px 20px;margin:16px 0}
+.pattern-box h4{color:#e94560;margin:0 0 8px;font-size:1em}
+.pattern-box ul{list-style:none;padding:0}
+.pattern-box li{padding:3px 0;color:#bbb}
+.pattern-box li::before{content:"▸ ";color:#e94560}
+.pattern-box strong{color:#eee}
+
+/* COMPARISON CARDS */
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin:16px 0}
+.compare-card{background:#16213e;border:1px solid #2a2a4a;border-radius:8px;padding:14px 16px}
+.compare-card h4{color:#e94560;margin:0 0 6px;font-size:.95em}
+.compare-card p{font-size:.88em;color:#aaa;margin:4px 0}
+.compare-card .vs{color:#666;font-size:.8em}
+
+/* DAVID TABLE */
+.david-table{border:2px solid #e94560;border-radius:8px;overflow:hidden;margin:16px 0}
+.david-table th{background:#e94560;color:#fff}
+.david-table td{font-size:.9em}
+
+/* SIGNATURE TABLE */
+.sig-table td:first-child{color:#aaa;font-style:italic;width:55%}
+.sig-table td:last-child{color:#fff;font-weight:bold}
+.sig-table tr:hover td:last-child{color:#e94560}
+
+/* STUDY STRATEGY */
+.strategy-phase{background:#16213e;border-radius:8px;padding:16px 20px;margin:10px 0;border-left:3px solid #e94560}
+.strategy-phase h4{color:#e94560;margin:0 0 8px}
+.strategy-phase ol,.strategy-phase ul{padding-left:20px;color:#bbb}
+.strategy-phase li{padding:2px 0}
+
+.tips-box{background:rgba(83,215,105,.06);border:1px solid rgba(83,215,105,.25);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box h4{color:#53d769;margin:0 0 8px}
+.tips-box li{color:#bbb;padding:2px 0}
+.tips-box strong{color:#eee}
+
+/* SEARCH HIGHLIGHT */
+mark{background:#e94560;color:#fff;padding:0 2px;border-radius:2px}
+
+/* PRINT */
+@media print{
+  body{background:#fff;color:#000}
+  nav{display:none}
+  main{padding:0}
+  .period-section{border-color:#000!important;page-break-inside:avoid}
+  .section-content.collapsed{display:block!important}
+  table,th,td{border:1px solid #ccc}
+  th{background:#eee;color:#000}
+  tr:hover{background:none}
+  .pattern-box,.compare-card,.strategy-phase,.tips-box,.key-concept{border-color:#999;background:#f9f9f9}
+  .pattern-box h4,.compare-card h4,.tips-box h4,.strategy-phase h4{color:#000}
+  td:nth-child(2){color:#000}
+  td:nth-child(3){color:#333}
+}
+
+@media(max-width:768px){
+  nav{padding:6px 10px}
+  nav .links{display:none}
+  main{padding:60px 10px 20px}
+  .period-section{padding-left:12px}
+  .compare-grid{grid-template-columns:1fr}
+  table{font-size:.78em}
+}
+</style>
+</head>
+<body>
+
+<nav>
+<span class="brand">ARTH201 Study Guide</span>
+<span class="links">
+<a href="#medieval">Medieval</a>
+<a href="#northern">Northern</a>
+<a href="#early-ren">Early Ren</a>
+<a href="#high-ren">High Ren</a>
+<a href="#mannerism">Mannerism</a>
+<a href="#ch23">N. Ren/Spain</a>
+<a href="#baroque-it">Baroque IT/ES</a>
+<a href="#baroque-ne">Baroque N. EU</a>
+<a href="#davids">Davids</a>
+<a href="#comparisons">Compare</a>
+<a href="#signatures">Signatures</a>
+<a href="#strategy">Strategy</a>
+</span>
+<span class="search-wrap"><input type="text" id="searchBox" placeholder="Search anything..." oninput="doSearch(this.value)"></span>
+</nav>
+
+<main>
+
+<h1 style="text-align:center;color:#e94560;font-size:2em;margin-bottom:5px">ARTH201 MIDTERM MASTER STUDY GUIDE</h1>
+<p style="text-align:center;color:#666;margin-bottom:30px">Medieval | Renaissance (Early / High / Mannerism) | Baroque &mdash; Click section headers to expand/collapse</p>
+
+<!-- ============ MEDIEVAL ============ -->
+<div class="period-section medieval" id="medieval">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-medieval">MEDIEVAL</span> Period 1: Late Medieval Art (13th&ndash;14th C.) &mdash; Chapter 14</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Transition from Byzantine flat/gold style &rarr; naturalism</div>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features / Iconography</th></tr></thead>
+<tbody>
+<tr><td>14-1</td><td>Bonaventura Berlinghieri</td><td>Saint Francis Altarpiece</td><td>1235</td><td>Tempera on wood</td><td>Pescia, Italy</td><td>Earliest depiction of St. Francis; Byzantine style; flat gold background; flanking miracle scenes</td></tr>
+<tr><td>14-2</td><td>Cimabue</td><td>Madonna Enthroned with Angels and Prophets</td><td>ca. 1280&ndash;1290</td><td>Tempera on wood</td><td>Florence</td><td>Byzantine but hints of 3D; hierarchical scale; enthroned Virgin; gold ground</td></tr>
+<tr><td>14-3</td><td>Giotto di Bondone</td><td>Madonna Enthroned (Ognissanti)</td><td>ca. 1310</td><td>Tempera on wood</td><td>Florence</td><td>Compare to Cimabue: more naturalistic, weight/volume, throne with depth</td></tr>
+<tr><td>14-4</td><td>Giotto</td><td>Lamentation (Arena Chapel)</td><td>ca. 1305</td><td>Fresco</td><td>Padua</td><td>Emotional realism; grief; diagonal composition leads to Christ; landscape setting</td></tr>
+<tr><td>14-5</td><td>Giotto</td><td>Entry into Jerusalem (Arena Chapel)</td><td>ca. 1305</td><td>Fresco</td><td>Padua</td><td>Narrative clarity; crowd scene; architectural backdrop</td></tr>
+<tr><td>14-6</td><td>Giotto</td><td>Betrayal of Jesus (Arena Chapel)</td><td>ca. 1305</td><td>Fresco</td><td>Padua</td><td>Dramatic confrontation; Judas's kiss; compressed figures</td></tr>
+<tr><td>14-7</td><td>Giotto</td><td>Interior, Arena (Scrovegni) Chapel</td><td>ca. 1305</td><td>Fresco cycle</td><td>Padua</td><td>Full narrative program of Life of Christ and Virgin</td></tr>
+<tr><td>14-8</td><td>Duccio di Buoninsegna</td><td>Maest&agrave; (Virgin and Child Enthroned)</td><td>1308&ndash;1311</td><td>Tempera/gold on wood</td><td>Siena</td><td>Sienese style: elegant, decorative, flowing lines; rich gold</td></tr>
+<tr><td>14-9</td><td>Duccio</td><td>Betrayal of Jesus (back of Maest&agrave;)</td><td>1308&ndash;1311</td><td>Tempera on wood</td><td>Siena</td><td>Compare to Giotto: more crowded, decorative; less monumental</td></tr>
+<tr><td>14-10</td><td>Simone Martini</td><td>Annunciation</td><td>1333</td><td>Tempera/gold on wood</td><td>Siena</td><td>International Gothic; sinuous lines; gold ground; Virgin recoils</td></tr>
+<tr><td>14-11</td><td>Pietro Lorenzetti</td><td>Birth of the Virgin</td><td>1342</td><td>Tempera on wood</td><td>Siena</td><td>Innovative triptych: scene extends across panels as unified space</td></tr>
+<tr><td>14-12</td><td>Ambrogio Lorenzetti</td><td>Allegory/Effects of Good Government</td><td>1338&ndash;1339</td><td>Fresco</td><td>Palazzo Pubblico, Siena</td><td>Secular political subject; panoramic city/countryside; earliest landscape</td></tr>
+<tr><td>14-13</td><td>Ambrogio Lorenzetti</td><td>Peaceful City (detail)</td><td>1338&ndash;1339</td><td>Fresco</td><td>Siena</td><td>Detailed city life; secular activities</td></tr>
+</tbody></table></div>
+<div class="pattern-box"><h4>PATTERN: Medieval Italian Art</h4><ul>
+<li><strong>Florence (Giotto)</strong> = WEIGHT, VOLUME, EMOTION, naturalism, fresco</li>
+<li><strong>Siena (Duccio, Martini, Lorenzetti)</strong> = ELEGANCE, LINE, GOLD, decorative, tempera on wood</li>
+<li><strong>Technique:</strong> Tempera on wood panels (altarpieces) and fresco (wall painting)</li>
+<li><strong>Gold backgrounds</strong> = divine, heavenly realm (Byzantine tradition)</li>
+<li><strong>Shift:</strong> From flat Byzantine &rarr; 3D space and human emotion</li>
+</ul></div>
+</div></div>
+
+<!-- ============ NORTHERN ============ -->
+<div class="period-section northern" id="northern">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-northern">NORTHERN</span> Period 1.5: Late Medieval &amp; Early Ren Northern Europe &mdash; Ch. 20</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Oil painting revolution; meticulous detail; disguised symbolism</div>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>20-1</td><td>Claus Sluter</td><td>Well of Moses</td><td>1395&ndash;1406</td><td>Painted stone</td><td>Dijon, France</td><td>Monumental prophets; emotional realism; weighty drapery</td></tr>
+<tr><td>20-2</td><td>Limbourg Brothers</td><td>Les Tr&egrave;s Riches Heures du Duc de Berry</td><td>1413&ndash;1416</td><td>Ink/tempera on vellum</td><td>France</td><td>Illuminated manuscript; International Gothic; calendar scenes</td></tr>
+<tr><td>20-3</td><td>Robert Campin</td><td>M&eacute;rode Altarpiece (Annunciation)</td><td>ca. 1425&ndash;1428</td><td>Oil on wood</td><td>Tournai, Flanders</td><td>Disguised symbolism: lilies, candle, mousetrap; domestic setting</td></tr>
+<tr><td>20-4</td><td>Jan van Eyck</td><td>Ghent Altarpiece (open)</td><td>1432</td><td>Oil on wood</td><td>Ghent, Flanders</td><td>Monumental polyptych; meticulous detail; revolutionary oil technique</td></tr>
+<tr><td>20-5</td><td>Jan van Eyck</td><td>Ghent Altarpiece (closed)</td><td>1432</td><td>Oil on wood</td><td>Ghent</td><td>Grisaille figures; Annunciation scene</td></tr>
+<tr><td>20-6</td><td>Jan van Eyck</td><td>Giovanni Arnolfini and His Wife</td><td>1434</td><td>Oil on wood</td><td>Bruges</td><td>Disguised symbolism: convex mirror, candle, dog, removed shoes</td></tr>
+<tr><td>20-7</td><td>Jan van Eyck</td><td>Man in a Red Turban (self-portrait?)</td><td>1433</td><td>Oil on wood</td><td>Bruges</td><td>Three-quarter view; extraordinary detail; inscribed frame</td></tr>
+<tr><td>20-8</td><td>Rogier van der Weyden</td><td>Deposition (Descent from the Cross)</td><td>ca. 1435</td><td>Oil on wood</td><td>Brussels</td><td>Emotional intensity; compressed space; Mary echoes Christ's pose</td></tr>
+<tr><td>20-9</td><td>Rogier van der Weyden</td><td>Saint Luke Drawing the Virgin</td><td>ca. 1435&ndash;1440</td><td>Oil on wood</td><td>Brussels</td><td>Patron saint of painters; landscape through window</td></tr>
+<tr><td>20-10</td><td>Petrus Christus</td><td>A Goldsmith in His Shop</td><td>1449</td><td>Oil on wood</td><td>Bruges</td><td>Genre-like scene; convex mirror</td></tr>
+<tr><td>20-11</td><td>Dirk Bouts</td><td>Last Supper</td><td>1464&ndash;1468</td><td>Oil on wood</td><td>Leuven</td><td>One-point perspective (early Northern); Eucharistic focus</td></tr>
+<tr><td>20-12</td><td>Hugo van der Goes</td><td>Portinari Altarpiece</td><td>ca. 1473&ndash;1478</td><td>Oil on wood</td><td>Ghent/Florence</td><td>Large scale; naturalistic shepherds; symbolic flowers</td></tr>
+<tr><td>20-13</td><td>Hans Memling</td><td>Virgin with Saints and Angels</td><td>1479</td><td>Oil on wood</td><td>Bruges</td><td>Serene; mystic marriage of Saint Catherine</td></tr>
+<tr><td>20-14</td><td>Hans Memling</td><td>Diptych of Martin van Nieuwenhove</td><td>1487</td><td>Oil on wood</td><td>Bruges</td><td>Donor portrait with Virgin; convex mirror</td></tr>
+<tr><td>20-15</td><td>Jean Fouquet</td><td>Melun Diptych</td><td>ca. 1452</td><td>Oil/tempera on wood</td><td>Tours, France</td><td>Flemish detail + Italian monumentality; idealized Virgin</td></tr>
+<tr><td>20-16</td><td>Konrad Witz</td><td>Miraculous Draft of Fish</td><td>1444</td><td>Oil on wood</td><td>Geneva</td><td>First topographical landscape: recognizable Lake Geneva</td></tr>
+<tr><td>20-17</td><td>Veit Stoss</td><td>Death and Assumption of the Virgin</td><td>1477&ndash;1489</td><td>Painted/gilded lime wood</td><td>Krak&oacute;w, Poland</td><td>Monumental wooden altarpiece; Late Gothic expressiveness</td></tr>
+<tr><td>20-18</td><td>Tilman Riemenschneider</td><td>Assumption of the Virgin</td><td>ca. 1495&ndash;1505</td><td>Lime wood (unpainted)</td><td>Creglingen, Germany</td><td>Gothic tracery; unpainted wood; spiritual expression</td></tr>
+<tr><td>20-19</td><td>Martin Schongauer</td><td>Saint Anthony Tormented by Demons</td><td>ca. 1480&ndash;1490</td><td>Engraving</td><td>Colmar, Germany</td><td>Masterful engraving; fantastic demons; influenced Michelangelo</td></tr>
+<tr><td>20-20</td><td>Michael Wolgemut</td><td>Nuremberg Chronicle</td><td>1493</td><td>Woodcut</td><td>Nuremberg</td><td>Early printed book illustration; generic cityscapes</td></tr>
+</tbody></table></div>
+<div class="pattern-box"><h4>PATTERN: Northern European Art</h4><ul>
+<li><strong>OIL PAINTING</strong> = rich color, luminous glazes, microscopic detail (van Eyck pioneered)</li>
+<li><strong>Disguised symbolism</strong> = everyday objects carry religious meaning</li>
+<li><strong>Portraits</strong> = three-quarter view, domestic interiors, donor portraits</li>
+<li><strong>Landscapes</strong> = emerging as backgrounds, eventually independent</li>
+<li><strong>Printmaking</strong> = woodcut + engraving (Schongauer); mass production</li>
+</ul></div>
+</div></div>
+
+<!-- ============ EARLY RENAISSANCE ============ -->
+<div class="period-section early-ren" id="early-ren">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-early-ren">EARLY REN</span> Period 2: Quattrocento Italy (15th C.) &mdash; Chapter 21</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Revival of classical antiquity; linear perspective; humanism; Florence as center</div>
+
+<h3>Sculpture</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>21-2</td><td>Filippo Brunelleschi</td><td>Sacrifice of Isaac (competition)</td><td>1401&ndash;1402</td><td>Gilded bronze</td><td>Florence</td><td>Baptistery door competition; emotional, angular; lost to Ghiberti</td></tr>
+<tr><td>21-3</td><td>Lorenzo Ghiberti</td><td>Sacrifice of Isaac (competition)</td><td>1401&ndash;1402</td><td>Gilded bronze</td><td>Florence</td><td>WON competition; graceful classical pose; Isaac like Greek torso</td></tr>
+<tr><td>21-4</td><td>Nanni di Banco</td><td>Four Crowned Saints</td><td>ca. 1410&ndash;1414</td><td>Marble</td><td>Or San Michele, Florence</td><td>Roman-style togas; group in niche; classical gravitas</td></tr>
+<tr><td>21-5</td><td>Donatello</td><td>Saint Mark</td><td>1411&ndash;1413</td><td>Marble</td><td>Or San Michele, Florence</td><td>Classical contrapposto; first Ren statue with convincing weight shift</td></tr>
+<tr><td>21-6</td><td>Donatello</td><td>Saint George</td><td>ca. 1410&ndash;1415</td><td>Marble</td><td>Or San Michele, Florence</td><td>Alert warrior; pioneering atmospheric perspective relief below</td></tr>
+<tr><td>21-7</td><td>Donatello</td><td>Saint George and the Dragon (relief)</td><td>ca. 1417&ndash;1420</td><td>Marble relief</td><td>Florence</td><td>Rilievo schiacciato (flattened relief); atmospheric perspective</td></tr>
+<tr><td>21-8</td><td>Donatello</td><td>Feast of Herod</td><td>ca. 1423&ndash;1427</td><td>Gilded bronze</td><td>Siena Baptistery</td><td>Linear perspective in relief; dramatic recession of space</td></tr>
+<tr><td>21-9</td><td>Lorenzo Ghiberti</td><td>Isaac and His Sons (Gates of Paradise panel)</td><td>1425&ndash;1452</td><td>Gilded bronze</td><td>Florence Baptistery</td><td>Pictorial relief; perspective; multiple scenes in one panel</td></tr>
+<tr><td>21-10</td><td>Lorenzo Ghiberti</td><td>Gates of Paradise (east doors)</td><td>1425&ndash;1452</td><td>Gilded bronze</td><td>Florence</td><td>10 panels; perspective; named "Gates of Paradise" by Michelangelo</td></tr>
+<tr><td>21-11</td><td>Donatello</td><td>David</td><td>ca. 1440&ndash;1460</td><td>Bronze</td><td>Florence</td><td>First freestanding nude male since antiquity; contrapposto; Medici</td></tr>
+<tr><td>21-12</td><td>Andrea del Verrocchio</td><td>David</td><td>ca. 1465&ndash;1470</td><td>Bronze</td><td>Florence</td><td>Compare Donatello: older, alert, clothed, proud stance</td></tr>
+<tr><td>21-13</td><td>Antonio del Pollaiuolo</td><td>Hercules and Antaeus</td><td>ca. 1470&ndash;1475</td><td>Bronze</td><td>Florence</td><td>Violent action; anatomical study; struggle/energy</td></tr>
+<tr><td>21-14</td><td>Bernardo Rossellino</td><td>Tomb of Leonardo Bruni</td><td>ca. 1444&ndash;1450</td><td>Marble</td><td>Santa Croce, Florence</td><td>Humanist tomb type; classical arch; model for Ren tombs</td></tr>
+<tr><td>21-15</td><td>Donatello</td><td>Gattamelata (equestrian)</td><td>ca. 1445&ndash;1453</td><td>Bronze</td><td>Padua</td><td>First large equestrian bronze since antiquity; calm dignity</td></tr>
+<tr><td>21-16</td><td>Andrea del Verrocchio</td><td>Bartolomeo Colleoni (equestrian)</td><td>ca. 1481&ndash;1495</td><td>Bronze</td><td>Venice</td><td>More aggressive than Gattamelata; fierce expression</td></tr>
+</tbody></table></div>
+
+<h3>Painting</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>21-17</td><td>Gentile da Fabriano</td><td>Adoration of the Magi</td><td>1423</td><td>Tempera on wood</td><td>Florence</td><td>International Gothic: lavish gold, costumes, exotic animals</td></tr>
+<tr><td>21-18</td><td>Masaccio</td><td>Tribute Money (Brancacci Chapel)</td><td>ca. 1424&ndash;1427</td><td>Fresco</td><td>Florence</td><td>Revolutionary: atmospheric perspective, chiaroscuro, continuous narrative</td></tr>
+<tr><td>21-19</td><td>Masaccio</td><td>Expulsion of Adam and Eve</td><td>ca. 1424&ndash;1427</td><td>Fresco</td><td>Florence</td><td>Raw emotion; naturalistic nudes; anguish and shame</td></tr>
+<tr><td>21-20</td><td>Masaccio</td><td>Holy Trinity</td><td>ca. 1424&ndash;1427</td><td>Fresco</td><td>Santa Maria Novella, Florence</td><td>First use of Brunelleschi's perspective; trompe l'oeil; skeleton memento mori</td></tr>
+<tr><td>21-21</td><td>Fra Angelico</td><td>Annunciation</td><td>ca. 1438&ndash;1447</td><td>Fresco</td><td>San Marco, Florence</td><td>Simple, devotional; gentle colors; monks' cells</td></tr>
+<tr><td>21-22</td><td>Andrea del Castagno</td><td>Last Supper</td><td>1447</td><td>Fresco</td><td>Sant'Apollonia, Florence</td><td>Dramatic marble setting; Judas isolated opposite side</td></tr>
+<tr><td>21-23</td><td>Paolo Uccello</td><td>Battle of San Romano</td><td>ca. 1435&ndash;1460</td><td>Tempera on wood</td><td>Florence</td><td>Obsessive perspective; foreshortened fallen soldiers</td></tr>
+<tr><td>21-24</td><td>Fra Filippo Lippi</td><td>Madonna and Child with Angels</td><td>ca. 1460&ndash;1465</td><td>Tempera on wood</td><td>Florence</td><td>Humanized Madonna; influenced Botticelli</td></tr>
+<tr><td>21-25</td><td>Piero della Francesca</td><td>Resurrection</td><td>ca. 1463&ndash;1465</td><td>Fresco</td><td>Borgo San Sepolcro</td><td>Triumphant Christ; sleeping soldiers; landscape death/rebirth</td></tr>
+<tr><td>21-26</td><td>Domenico Ghirlandaio</td><td>Birth of the Virgin</td><td>ca. 1485&ndash;1490</td><td>Fresco</td><td>Santa Maria Novella, Florence</td><td>Contemporary Florentine women; secularization of sacred scenes</td></tr>
+<tr><td>21-27</td><td>Domenico Ghirlandaio</td><td>Giovanna Tornabuoni</td><td>1488</td><td>Oil/tempera on wood</td><td>Florence</td><td>Profile portrait; classical inscription; wealth/beauty</td></tr>
+<tr><td>21-28</td><td>Sandro Botticelli</td><td>Primavera (Spring)</td><td>ca. 1482</td><td>Tempera on wood</td><td>Florence</td><td>Mythological: Venus, Three Graces, Mercury, Flora; Neo-Platonic</td></tr>
+<tr><td>21-1</td><td>Sandro Botticelli</td><td>Birth of Venus</td><td>ca. 1484&ndash;1486</td><td>Tempera on canvas</td><td>Florence</td><td>Revival of classical nude; Venus on shell; Neo-Platonic beauty</td></tr>
+<tr><td>21-29</td><td>Antonio del Pollaiuolo</td><td>Battle of Ten Nudes</td><td>ca. 1465</td><td>Engraving</td><td>Florence</td><td>Anatomical study; first major Italian engraving</td></tr>
+<tr><td>21-41</td><td>Perugino</td><td>Christ Delivering the Keys to Saint Peter</td><td>1481&ndash;1483</td><td>Fresco</td><td>Sistine Chapel</td><td>Perfect perspective; central-plan temple; papal authority</td></tr>
+<tr><td>21-42</td><td>Luca Signorelli</td><td>The Damned Cast into Hell</td><td>1499&ndash;1502</td><td>Fresco</td><td>Orvieto Cathedral</td><td>Muscular nudes; violent demons; influenced Michelangelo</td></tr>
+<tr><td>21-43</td><td>Piero della Francesca</td><td>Flagellation</td><td>ca. 1455&ndash;1465</td><td>Oil/tempera on wood</td><td>Urbino</td><td>Perfect perspective; mysterious foreground figures; mathematical</td></tr>
+<tr><td>21-44</td><td>Piero della Francesca</td><td>Battista Sforza and Federico da Montefeltro</td><td>ca. 1472&ndash;1474</td><td>Oil/tempera on wood</td><td>Urbino</td><td>Profile portrait diptych; landscape backgrounds</td></tr>
+</tbody></table></div>
+
+<h3>Architecture</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>21-29A/B</td><td>Filippo Brunelleschi</td><td>Florence Cathedral dome</td><td>1420&ndash;1436</td><td>Brick/stone</td><td>Florence</td><td>Double-shell dome; no centering; engineering marvel</td></tr>
+<tr><td>21-30</td><td>Filippo Brunelleschi</td><td>Ospedale degli Innocenti</td><td>begun 1419</td><td>Stone/stucco</td><td>Florence</td><td>First Renaissance building; classical columns; roundels</td></tr>
+<tr><td>21-31</td><td>Filippo Brunelleschi</td><td>San Lorenzo (interior)</td><td>ca. 1421&ndash;1460</td><td>Stone</td><td>Florence</td><td>Mathematical clarity; pietra serena gray vs white walls</td></tr>
+<tr><td>21-32</td><td>Filippo Brunelleschi</td><td>Pazzi Chapel</td><td>begun 1433</td><td>Stone</td><td>Florence</td><td>Central plan; dome emphasis; classical vocabulary</td></tr>
+<tr><td>21-35</td><td>Michelozzo di Bartolomeo</td><td>Palazzo Medici-Riccardi</td><td>begun 1445</td><td>Stone</td><td>Florence</td><td>Rusticated ground &rarr; smooth upper; Medici power</td></tr>
+<tr><td>21-37</td><td>Leon Battista Alberti</td><td>Palazzo Rucellai</td><td>ca. 1452&ndash;1470</td><td>Stone</td><td>Florence</td><td>Classical pilasters; superimposed orders; flat facade</td></tr>
+<tr><td>21-45</td><td>Leon Battista Alberti</td><td>Sant'Andrea (facade)</td><td>designed 1470</td><td>Stone</td><td>Mantua</td><td>Triumphal arch + temple front; colossal order; Roman</td></tr>
+</tbody></table></div>
+
+<h3>Venice &amp; Courts</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>21-40</td><td>Giovanni Bellini</td><td>Saint Francis in the Desert</td><td>ca. 1477&ndash;1480</td><td>Oil on wood</td><td>Venice</td><td>Luminous landscape; Franciscan mysticism; Venetian light</td></tr>
+<tr><td>21-48/49</td><td>Andrea Mantegna</td><td>Camera Picta (ceiling/oculus)</td><td>1465&ndash;1474</td><td>Fresco</td><td>Mantua</td><td>Di sotto in s&ugrave;; first illusionistic ceiling; putti peer down</td></tr>
+<tr><td>21-50</td><td>Andrea Mantegna</td><td>Foreshortened Christ (Lamentation)</td><td>ca. 1500</td><td>Tempera on canvas</td><td>Milan</td><td>Extreme foreshortening; emotional restraint</td></tr>
+</tbody></table></div>
+
+<div class="pattern-box"><h4>PATTERN: Quattrocento Renaissance</h4><ul>
+<li><strong>Florence</strong> = center of innovation (Medici patronage)</li>
+<li><strong>Linear perspective</strong> invented by Brunelleschi, used by Masaccio</li>
+<li><strong>Classical revival:</strong> contrapposto, nude, Roman architecture, mythology</li>
+<li><strong>Humanism:</strong> individual achievement, portraits, secular themes</li>
+<li><strong>Mediums:</strong> fresco, tempera on wood, bronze sculpture</li>
+<li><strong>Architecture:</strong> math-based proportions, classical orders, round arches</li>
+</ul></div>
+</div></div>
+
+<!-- ============ HIGH RENAISSANCE ============ -->
+<div class="period-section high-ren" id="high-ren">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-high-ren">HIGH REN</span> Period 3: High Renaissance &amp; Mannerism &mdash; Chapter 22</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Perfection of Renaissance ideals &rarr; then Mannerist distortion/elongation</div>
+
+<h3>High Renaissance Painting</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>22-2</td><td>Leonardo da Vinci</td><td>Madonna of the Rocks</td><td>ca. 1483&ndash;1490</td><td>Oil on wood</td><td>Milan/Paris</td><td>Sfumato; pyramidal composition; grotto; chiaroscuro</td></tr>
+<tr><td>22-3</td><td>Leonardo da Vinci</td><td>Madonna/Child/St. Anne/Infant John (cartoon)</td><td>ca. 1505&ndash;1507</td><td>Charcoal on paper</td><td>London</td><td>Pyramidal composition; gentle modeling</td></tr>
+<tr><td>22-4</td><td>Leonardo da Vinci</td><td>Last Supper</td><td>ca. 1495&ndash;1498</td><td>Oil/tempera on plaster</td><td>Milan</td><td>Experimental medium; one-point perspective; psychological drama</td></tr>
+<tr><td>22-5</td><td>Leonardo da Vinci</td><td>Mona Lisa</td><td>ca. 1503&ndash;1505</td><td>Oil on wood</td><td>Louvre</td><td>Sfumato; mysterious smile; atmospheric landscape</td></tr>
+<tr><td>22-6</td><td>Leonardo da Vinci</td><td>The Fetus and Lining of the Uterus</td><td>ca. 1511&ndash;1513</td><td>Pen/ink with wash</td><td>Windsor Castle</td><td>Anatomical drawing; scientific observation</td></tr>
+<tr><td>22-7</td><td>Raphael</td><td>Marriage of the Virgin</td><td>1504</td><td>Oil on wood</td><td>Citt&agrave; di Castello</td><td>Perugino influence; central-plan temple; perfect perspective</td></tr>
+<tr><td>22-8</td><td>Raphael</td><td>Madonna of the Meadows</td><td>1505&ndash;1506</td><td>Oil on wood</td><td>Florence</td><td>Pyramidal composition; Leonardo influence; sfumato</td></tr>
+<tr><td>22-9</td><td>Raphael</td><td>School of Athens</td><td>1509&ndash;1511</td><td>Fresco</td><td>Vatican</td><td>Plato (up) &amp; Aristotle (out); barrel vault; philosopher portraits</td></tr>
+<tr><td>22-10</td><td>Raphael</td><td>Pope Leo X with Cardinals</td><td>ca. 1517</td><td>Oil on wood</td><td>Rome</td><td>Rich textures; power portrait; magnifying glass</td></tr>
+<tr><td>22-11</td><td>Raphael</td><td>Galatea</td><td>ca. 1513</td><td>Fresco</td><td>Villa Farnesina, Rome</td><td>Mythological; dynamic spiral; classical beauty</td></tr>
+<tr><td>22-29</td><td>Giovanni Bellini</td><td>San Zaccaria Altarpiece</td><td>1505</td><td>Oil on wood/canvas</td><td>Venice</td><td>Sacra conversazione; unified light; harmonious color</td></tr>
+<tr><td>22-30</td><td>Giovanni Bellini</td><td>Feast of the Gods</td><td>1514</td><td>Oil on canvas</td><td>Ferrara</td><td>Mythological pastoral; rich Venetian color</td></tr>
+<tr><td>22-31</td><td>Giorgione</td><td>The Tempest</td><td>ca. 1509&ndash;1510</td><td>Oil on canvas</td><td>Venice</td><td>First "poetic" landscape; mood over narrative; mysterious</td></tr>
+<tr><td>22-32</td><td>Titian</td><td>Pastoral Symphony</td><td>ca. 1508&ndash;1511</td><td>Oil on canvas</td><td>Venice</td><td>Venetian colorito; pastoral mood; nude women as muses</td></tr>
+<tr><td>22-33</td><td>Titian</td><td>Assumption of the Virgin</td><td>1515&ndash;1518</td><td>Oil on wood</td><td>Frari, Venice</td><td>Monumental; brilliant color; foreshadows Baroque</td></tr>
+<tr><td>22-34</td><td>Titian</td><td>Pesaro Madonna</td><td>1519&ndash;1526</td><td>Oil on canvas</td><td>Frari, Venice</td><td>Revolutionary asymmetrical composition; diagonal</td></tr>
+<tr><td>22-35</td><td>Titian</td><td>Meeting of Bacchus and Ariadne</td><td>1522&ndash;1523</td><td>Oil on canvas</td><td>Ferrara</td><td>Dynamic movement; Bacchus leaps from chariot</td></tr>
+<tr><td>22-36</td><td>Titian</td><td>Venus of Urbino</td><td>1536&ndash;1538</td><td>Oil on canvas</td><td>Urbino</td><td>Reclining nude; direct gaze; domestic setting; sensuous</td></tr>
+<tr><td>22-37</td><td>Titian</td><td>Isabella d'Este</td><td>1534&ndash;1536</td><td>Oil on canvas</td><td>Mantua</td><td>Painted from old portrait; idealized</td></tr>
+</tbody></table></div>
+
+<h3>Sculpture (Michelangelo)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>22-12</td><td>Michelangelo</td><td>Piet&agrave;</td><td>ca. 1498&ndash;1500</td><td>Marble</td><td>St. Peter's, Vatican</td><td>Young Virgin; polished marble; pyramidal; beauty from suffering</td></tr>
+<tr><td>22-13</td><td>Michelangelo</td><td>David</td><td>1501&ndash;1504</td><td>Marble</td><td>Florence</td><td>17 ft colossal; tense anticipation; civic symbol</td></tr>
+<tr><td>22-14</td><td>Michelangelo</td><td>Moses</td><td>ca. 1513&ndash;1515</td><td>Marble</td><td>San Pietro in Vincoli, Rome</td><td>Julius II tomb; powerful patriarch; horns</td></tr>
+<tr><td>22-15</td><td>Michelangelo</td><td>Bound Slave</td><td>ca. 1513&ndash;1516</td><td>Marble</td><td>Louvre</td><td>Unfinished; struggling figure; Julius II tomb</td></tr>
+<tr><td>22-16</td><td>Michelangelo</td><td>Tomb of Giuliano de' Medici</td><td>1519&ndash;1534</td><td>Marble</td><td>San Lorenzo, Florence</td><td>Night and Day; allegorical reclining figures</td></tr>
+<tr><td>22-20</td><td>Michelangelo</td><td>Piet&agrave; (late)</td><td>ca. 1547&ndash;1555</td><td>Marble</td><td>Florence</td><td>Unfinished; Nicodemus = self-portrait</td></tr>
+</tbody></table></div>
+
+<h3>Sistine Chapel</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>22-17</td><td>Michelangelo</td><td>Sistine Chapel ceiling</td><td>1508&ndash;1512</td><td>Fresco</td><td>Vatican</td><td>300+ figures; Genesis; architectural framework</td></tr>
+<tr><td>22-18</td><td>Michelangelo</td><td>Creation of Adam</td><td>1511&ndash;1512</td><td>Fresco</td><td>Sistine Chapel</td><td>Near-touching fingers; most iconic Renaissance image</td></tr>
+<tr><td>22-19</td><td>Michelangelo</td><td>Last Judgment</td><td>1536&ndash;1541</td><td>Fresco</td><td>Sistine Chapel</td><td>Terrifying; muscular nudes; self-portrait on flayed skin</td></tr>
+</tbody></table></div>
+
+<h3>Architecture</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>22-21</td><td>Bramante</td><td>Tempietto</td><td>1502</td><td>Stone</td><td>Rome</td><td>Perfect central plan; Doric columns; St. Peter's crucifixion site</td></tr>
+<tr><td>22-22</td><td>Bramante</td><td>Plan for Saint Peter's</td><td>1505</td><td>&mdash;</td><td>Vatican</td><td>Greek cross plan; central dome</td></tr>
+<tr><td>22-24/25</td><td>Michelangelo</td><td>Saint Peter's (plan/dome)</td><td>1546&ndash;1564</td><td>Stone/brick</td><td>Vatican</td><td>Modified Bramante; colossal pilasters; dome</td></tr>
+<tr><td>22-26</td><td>Antonio da Sangallo</td><td>Palazzo Farnese</td><td>1517&ndash;1546</td><td>Stone</td><td>Rome</td><td>Rusticated; quoins; Michelangelo courtyard</td></tr>
+<tr><td>22-28</td><td>Michelangelo</td><td>Laurentian Library vestibule</td><td>1524&ndash;1534</td><td>Stone</td><td>Florence</td><td>Mannerist architecture: recessed columns; inverted scrolls</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ============ MANNERISM ============ -->
+<div class="period-section mannerism" id="mannerism">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-mannerism">MANNERISM</span> Mannerism (ca. 1520&ndash;1600) &mdash; Chapter 22 cont.</h2>
+</div>
+<div class="section-content">
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>22-38</td><td>Pontormo</td><td>Entombment of Christ</td><td>1525&ndash;1528</td><td>Oil on wood</td><td>Florence</td><td>Pastel colors; swirling; no ground plane; elongated figures</td></tr>
+<tr><td>22-39</td><td>Parmigianino</td><td>Madonna with the Long Neck</td><td>1534&ndash;1540</td><td>Oil on wood</td><td>Parma</td><td>Extreme elongation; tiny prophet; elegance over naturalism</td></tr>
+<tr><td>22-40</td><td>Parmigianino</td><td>Self-Portrait in a Convex Mirror</td><td>1524</td><td>Oil on wood</td><td>Vienna</td><td>Distorted hand; Mannerist self-awareness</td></tr>
+<tr><td>22-41</td><td>Bronzino</td><td>Venus, Cupid, Folly, and Time</td><td>ca. 1546</td><td>Oil on wood</td><td>London</td><td>Allegory of deceit; erotic; cold colors; intellectual puzzle</td></tr>
+<tr><td>22-42</td><td>Domenico Beccafumi</td><td>Fall of the Rebel Angels</td><td>ca. 1524</td><td>Oil on wood</td><td>Siena</td><td>Chaotic; spatial disorientation</td></tr>
+<tr><td>22-43</td><td>Bronzino</td><td>Eleonora of Toledo and Giovanni de' Medici</td><td>ca. 1546</td><td>Oil on wood</td><td>Florence</td><td>Formal court portrait; brocade detail; cool detachment</td></tr>
+<tr><td>22-44</td><td>Sofonisba Anguissola</td><td>Portrait of the Artist's Sisters and Brother</td><td>ca. 1555</td><td>Oil on wood</td><td>Cremona</td><td>Leading woman artist; informal group portrait</td></tr>
+<tr><td>22-50</td><td>Tintoretto</td><td>Last Supper</td><td>1594</td><td>Oil on canvas</td><td>Venice</td><td>Dramatic diagonal; supernatural light; Counter-Reformation</td></tr>
+<tr><td>22-51</td><td>Veronese</td><td>Christ in the House of Levi</td><td>1573</td><td>Oil on canvas</td><td>Venice</td><td>Massive 18&times;42 ft; Inquisition controversy</td></tr>
+<tr><td>22-52</td><td>Veronese</td><td>Triumph of Venice</td><td>ca. 1585</td><td>Oil on canvas</td><td>Doge's Palace</td><td>Illusionistic ceiling; di sotto in s&ugrave;</td></tr>
+<tr><td>22-53</td><td>Correggio</td><td>Assumption of the Virgin</td><td>1526&ndash;1530</td><td>Fresco</td><td>Parma Cathedral</td><td>Illusionistic dome; swirling; foreshadows Baroque</td></tr>
+<tr><td>22-45</td><td>Cellini</td><td>Saltcellar of Francis I</td><td>1540&ndash;1543</td><td>Gold, enamel</td><td>Vienna</td><td>Lavish; elongated figures; virtuoso goldsmith work</td></tr>
+<tr><td>22-46</td><td>Giambologna</td><td>Abduction of the Sabine Women</td><td>1579&ndash;1583</td><td>Marble</td><td>Florence</td><td>Figura serpentinata: spiraling upward; multiple viewpoints</td></tr>
+<tr><td>22-47</td><td>Giulio Romano</td><td>Palazzo del T&egrave; (Fall of the Giants)</td><td>1525&ndash;1535</td><td>Stone/fresco</td><td>Mantua</td><td>Mannerist architecture breaking rules</td></tr>
+<tr><td>22-54</td><td>Palladio</td><td>Villa Rotonda</td><td>ca. 1550&ndash;1570</td><td>Stone</td><td>Vicenza</td><td>Four identical temple facades; dome; mathematical harmony</td></tr>
+<tr><td>22-56/57</td><td>Palladio</td><td>San Giorgio Maggiore</td><td>begun 1566</td><td>Stone</td><td>Venice</td><td>Interlocking temple fronts; white facade</td></tr>
+<tr><td>22-58/59</td><td>Vignola / della Porta</td><td>Il Ges&ugrave;</td><td>1568&ndash;1584</td><td>Stone</td><td>Rome</td><td>Mother church of Jesuits; wide nave; Counter-Reformation</td></tr>
+</tbody></table></div>
+<div class="pattern-box"><h4>PATTERN: High Ren &rarr; Mannerism</h4><ul>
+<li><strong>High Ren</strong> (ca. 1490&ndash;1520): HARMONY, BALANCE, IDEAL BEAUTY &mdash; Leonardo (sfumato), Raphael (harmony), Michelangelo (terribilit&agrave;), Titian (colorito)</li>
+<li><strong>Mannerism</strong> (ca. 1520&ndash;1600): ELONGATION, TENSION, AMBIGUITY &mdash; weird space, acid colors, distorted proportions &mdash; Pontormo, Parmigianino, Bronzino, Tintoretto</li>
+<li><strong>Figura serpentinata</strong> (spiraling figure) &mdash; Giambologna</li>
+</ul></div>
+</div></div>
+
+<!-- ============ CH23 N. REN / SPAIN ============ -->
+<div class="period-section northern" id="ch23">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-northern">NORTHERN</span> Period 3.5: N. Europe &amp; Spain &mdash; Chapter 23</h2>
+</div>
+<div class="section-content">
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>23-1</td><td>Quinten Massys</td><td>Money-Changer and His Wife</td><td>1514</td><td>Oil on wood</td><td>Antwerp</td><td>Moral commentary; convex mirror; wealth vs piety</td></tr>
+<tr><td>23-2</td><td>Matthias Gr&uuml;newald</td><td>Isenheim Altarpiece</td><td>ca. 1512&ndash;1515</td><td>Oil on wood</td><td>Isenheim, France</td><td>Intense suffering; hospital context; gruesome Crucifixion + miraculous Resurrection</td></tr>
+<tr><td>23-3</td><td>Albrecht D&uuml;rer</td><td>Self-Portrait</td><td>1500</td><td>Oil on wood</td><td>Nuremberg</td><td>Christ-like frontal pose; artist as genius</td></tr>
+<tr><td>23-4</td><td>Albrecht D&uuml;rer</td><td>Fall of Man (Adam and Eve)</td><td>1504</td><td>Engraving</td><td>Nuremberg</td><td>Ideal proportions; four temperaments; Northern + Italian</td></tr>
+<tr><td>23-5</td><td>Albrecht D&uuml;rer</td><td>Melencolia I</td><td>1514</td><td>Engraving</td><td>Nuremberg</td><td>Artistic melancholy; magic square; complex symbolism</td></tr>
+<tr><td>23-6</td><td>Albrecht D&uuml;rer</td><td>Four Apostles</td><td>1526</td><td>Oil on wood</td><td>Nuremberg</td><td>Lutheran sympathies; Bible centrality</td></tr>
+<tr><td>23-8</td><td>Lucas Cranach the Elder</td><td>Judgment of Paris</td><td>1530</td><td>Oil on wood</td><td>Wittenberg</td><td>Classical myth; German landscape; playful nudes</td></tr>
+<tr><td>23-9</td><td>Hans Baldung Grien</td><td>Witches' Sabbath</td><td>1510</td><td>Chiaroscuro woodcut</td><td>Strasbourg</td><td>Macabre; witchcraft; innovative technique</td></tr>
+<tr><td>23-10</td><td>Hans Baldung Grien</td><td>Three Ages of Woman and Death</td><td>ca. 1510</td><td>Oil on wood</td><td>Strasbourg</td><td>Vanitas; youth/old age/death; hourglass</td></tr>
+<tr><td>23-11</td><td>Albrecht Altdorfer</td><td>Battle of Issus</td><td>1529</td><td>Oil on wood</td><td>Regensburg</td><td>Cosmic landscape; Alexander the Great; vast panorama</td></tr>
+<tr><td>23-12</td><td>Hans Holbein the Younger</td><td>The French Ambassadors</td><td>1533</td><td>Oil on wood</td><td>England</td><td>Anamorphic skull; symbols of learning; memento mori</td></tr>
+<tr><td>23-13</td><td>Hans Holbein</td><td>Henry VIII</td><td>1540</td><td>Oil on wood</td><td>England</td><td>Power portrait; frontal; imposing; Tudor authority</td></tr>
+<tr><td>23-14</td><td>Jean Clouet</td><td>Francis I</td><td>ca. 1525&ndash;1530</td><td>Tempera/oil on wood</td><td>France</td><td>Royal portrait; rich costume; compare to Holbein</td></tr>
+<tr><td>23-19</td><td>Pieter Bruegel the Elder</td><td>Netherlandish Proverbs</td><td>1559</td><td>Oil on wood</td><td>Antwerp</td><td>Over 100 proverbs; panoramic village</td></tr>
+<tr><td>23-20</td><td>Pieter Bruegel</td><td>Hunters in the Snow</td><td>1565</td><td>Oil on wood</td><td>Antwerp</td><td>Landscape masterpiece; winter; birds-eye view</td></tr>
+<tr><td>23-22</td><td>El Greco</td><td>Burial of Count Orgaz</td><td>1586</td><td>Oil on canvas</td><td>Toledo, Spain</td><td>Two zones: earthly (realistic) / heavenly (elongated Mannerist)</td></tr>
+<tr><td>23-24</td><td>El Greco</td><td>View of Toledo</td><td>ca. 1610</td><td>Oil on canvas</td><td>Toledo, Spain</td><td>Dramatic expressionistic landscape; stormy sky</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ============ BAROQUE ITALY/SPAIN ============ -->
+<div class="period-section baroque" id="baroque-it">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-baroque">BAROQUE</span> Period 4: Baroque Italy &amp; Spain &mdash; Chapter 24</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Drama, emotion, movement, light/shadow, Counter-Reformation propaganda, theatricality</div>
+
+<h3>Architecture</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>24-2</td><td>Carlo Maderno</td><td>Santa Susanna (facade)</td><td>1597&ndash;1603</td><td>Stone</td><td>Rome</td><td>Earliest Baroque facade; dramatic vertical thrust</td></tr>
+<tr><td>24-3</td><td>Carlo Maderno</td><td>Saint Peter's (facade)</td><td>1606&ndash;1612</td><td>Stone</td><td>Vatican</td><td>Expanded Santa Susanna; added nave bays</td></tr>
+<tr><td>24-4</td><td>Bernini</td><td>Saint Peter's Piazza</td><td>1656&ndash;1667</td><td>Stone</td><td>Vatican</td><td>Oval piazza; "welcoming arms"; 4 rows columns</td></tr>
+<tr><td>24-5</td><td>Bernini</td><td>Baldacchino</td><td>1624&ndash;1633</td><td>Bronze</td><td>Vatican</td><td>100 ft; spiral columns; Barberini bees; Peter's tomb</td></tr>
+<tr><td>24-8</td><td>Borromini</td><td>San Carlo alle Quattro Fontane</td><td>1638&ndash;1641</td><td>Stone</td><td>Rome</td><td>Undulating concave/convex facade; oval dome</td></tr>
+<tr><td>24-11</td><td>Borromini</td><td>Sant'Ivo alla Sapienza</td><td>begun 1642</td><td>Stone</td><td>Rome</td><td>Star-shaped plan; dome grows organically from walls</td></tr>
+<tr><td>24-14</td><td>Guarino Guarini</td><td>Chapel of the Holy Shroud (dome)</td><td>1667&ndash;1694</td><td>Stone</td><td>Turin</td><td>Kaleidoscopic interlocking arches</td></tr>
+</tbody></table></div>
+
+<h3>Sculpture</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>24-1</td><td>Bernini</td><td>Ecstasy of Saint Teresa</td><td>1647&ndash;1652</td><td>Marble</td><td>Cornaro Chapel, Rome</td><td>Theatrical: hidden light; Cornaro audience; spiritual ecstasy; multimedia</td></tr>
+<tr><td>24-6</td><td>Bernini</td><td>David</td><td>1623</td><td>Marble</td><td>Galleria Borghese, Rome</td><td>Mid-throw action; facial grimace; demands surrounding space</td></tr>
+<tr><td>24-7</td><td>Bernini</td><td>Fountain of the Four Rivers</td><td>1648&ndash;1651</td><td>Travertine/marble</td><td>Piazza Navona, Rome</td><td>Four rivers = four continents; obelisk; theatrical water</td></tr>
+</tbody></table></div>
+
+<h3>Painting &mdash; Italy</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>24-15</td><td>Annibale Carracci</td><td>Flight into Egypt</td><td>1603&ndash;1604</td><td>Oil on canvas</td><td>Rome</td><td>"Ideal" classical landscape; Venetian color influence</td></tr>
+<tr><td>24-16</td><td>Annibale Carracci</td><td>Loves of the Gods (Farnese ceiling)</td><td>1597&ndash;1601</td><td>Fresco</td><td>Rome</td><td>Quadro riportato: framed paintings on ceiling</td></tr>
+<tr><td>24-17</td><td>Caravaggio</td><td>Calling of Saint Matthew</td><td>ca. 1597&ndash;1601</td><td>Oil on canvas</td><td>San Luigi dei Francesi, Rome</td><td>Tenebrism: dramatic spotlight; contemporary dress; tavern</td></tr>
+<tr><td>24-18</td><td>Caravaggio</td><td>Conversion of Saint Paul</td><td>ca. 1601</td><td>Oil on canvas</td><td>Santa Maria del Popolo, Rome</td><td>Dramatic foreshortening; horse dominates; divine light</td></tr>
+<tr><td>24-19</td><td>Artemisia Gentileschi</td><td>Judith Slaying Holofernes</td><td>ca. 1614&ndash;1620</td><td>Oil on canvas</td><td>Naples/Florence</td><td>Leading woman artist; Caravaggesque tenebrism; violent action</td></tr>
+<tr><td>24-20</td><td>Artemisia Gentileschi</td><td>Self-Portrait as Allegory of Painting</td><td>ca. 1638&ndash;1639</td><td>Oil on canvas</td><td>Naples/London</td><td>Artist as La Pittura; active creation</td></tr>
+<tr><td>24-22</td><td>Gaulli (Il Baciccia)</td><td>Triumph of the Name of Jesus</td><td>1676&ndash;1679</td><td>Fresco</td><td>Il Ges&ugrave;, Rome</td><td>Illusionistic ceiling; figures spill over frame</td></tr>
+<tr><td>24-23</td><td>Fra Andrea Pozzo</td><td>Glorification of Saint Ignatius</td><td>1691&ndash;1694</td><td>Fresco</td><td>Sant'Ignazio, Rome</td><td>Ultimate trompe l'oeil ceiling; one correct viewing spot</td></tr>
+</tbody></table></div>
+
+<h3>Painting &mdash; Spain</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>24-24</td><td>Jusepe de Ribera</td><td>Martyrdom of Saint Philip</td><td>ca. 1639</td><td>Oil on canvas</td><td>Naples</td><td>Caravaggesque; graphic suffering; tenebrism</td></tr>
+<tr><td>24-25</td><td>Francisco de Zurbar&aacute;n</td><td>Saint Serapion</td><td>1628</td><td>Oil on canvas</td><td>Seville</td><td>Mercedarian martyr; stark white robes; powerful devotion</td></tr>
+<tr><td>24-26</td><td>Diego Vel&aacute;zquez</td><td>Water Carrier of Seville</td><td>ca. 1619</td><td>Oil on canvas</td><td>Seville</td><td>Early bodeg&oacute;n; Caravaggesque; masterful glass/water</td></tr>
+<tr><td>24-27</td><td>Diego Vel&aacute;zquez</td><td>Surrender of Breda</td><td>1634&ndash;1635</td><td>Oil on canvas</td><td>Madrid</td><td>History painting; magnanimous victor; lances</td></tr>
+<tr><td>24-28</td><td>Diego Vel&aacute;zquez</td><td>Las Meninas</td><td>1656</td><td>Oil on canvas</td><td>Madrid</td><td>Complex space; mirror reflection; painter in painting</td></tr>
+<tr><td>24-29</td><td>Bartolom&eacute; Esteban Murillo</td><td>Immaculate Conception</td><td>ca. 1661&ndash;1670</td><td>Oil on canvas</td><td>Seville</td><td>Canonical Immaculate Virgin; soft light; cherubs</td></tr>
+</tbody></table></div>
+<div class="pattern-box"><h4>PATTERN: Baroque Italy &amp; Spain</h4><ul>
+<li><strong>DRAMATIC LIGHTING</strong> (tenebrism/chiaroscuro) &mdash; Caravaggio invented it</li>
+<li><strong>MOVEMENT</strong> &mdash; spiraling, diagonal compositions; figures in action</li>
+<li><strong>EMOTION</strong> &mdash; heightened, theatrical, visceral</li>
+<li><strong>Counter-Reformation</strong> &mdash; Catholic Church uses art as propaganda</li>
+<li><strong>Illusionistic ceilings</strong> &mdash; architecture extends into sky (Gaulli, Pozzo)</li>
+<li><strong>Spain</strong> &mdash; intense piety, tenebrism, Vel&aacute;zquez as court painter</li>
+</ul></div>
+</div></div>
+
+<!-- ============ BAROQUE NORTHERN EUROPE ============ -->
+<div class="period-section baroque" id="baroque-ne">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2><span class="period-tag tag-baroque">BAROQUE</span> Period 4B: Baroque Northern Europe &mdash; Chapter 25</h2>
+</div>
+<div class="section-content">
+<div class="key-concept"><strong>KEY CONCEPT:</strong> Protestant vs Catholic patronage; merchant-class art market; genre, landscape, still life, portraiture; French classicism &amp; absolutism (Versailles)</div>
+
+<h3>Flanders (Catholic, Spanish-ruled)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>25-1</td><td>Pieter Claesz</td><td>Vanitas Still Life</td><td>1630s</td><td>Oil on panel</td><td>Nuremberg</td><td>Vanitas: skull, timepiece, tipped glass = life's transience; self-portrait in glass ball</td></tr>
+<tr><td>25-2</td><td>Peter Paul Rubens</td><td>Elevation of the Cross</td><td>1610</td><td>Oil on wood (triptych)</td><td>Antwerp Cathedral</td><td>Muscled figures; Michelangelo + Caravaggio influence; diagonal; Counter-Reformation</td></tr>
+<tr><td>25-3</td><td>Peter Paul Rubens</td><td>Consequences of War</td><td>1638&ndash;1639</td><td>Oil on canvas</td><td>Florence</td><td>Allegorical: Mars dragged by Fury; Venus restrains; Thirty Years' War</td></tr>
+<tr><td>25-4</td><td>Peter Paul Rubens</td><td>Arrival of Marie de' Medici at Marseilles</td><td>1622&ndash;1625</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>Marie de' Medici cycle; Neptune, Nereids, Fame; robust theatricality</td></tr>
+<tr><td>25-5</td><td>Anthony van Dyck</td><td>Charles I at the Hunt</td><td>ca. 1635</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>Court portrait; elegant relaxed authority; landscape setting</td></tr>
+<tr><td>25-6</td><td>Clara Peeters</td><td>Still Life with Flowers, Goblet, Dried Fruit, and Pretzels</td><td>1611</td><td>Oil on panel</td><td>Prado, Madrid</td><td>Pioneer still-life; "breakfast piece"; virtuoso surfaces</td></tr>
+</tbody></table></div>
+
+<h3>Dutch Republic (Protestant, merchant-class)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>25-7</td><td>Hendrick ter Brugghen</td><td>Calling of Saint Matthew</td><td>1621</td><td>Oil on canvas</td><td>Utrecht</td><td>Caravaggio influence; softer palette; intimate scale</td></tr>
+<tr><td>25-8</td><td>Gerrit van Honthorst</td><td>Supper Party</td><td>1620</td><td>Oil on canvas</td><td>Uffizi, Florence</td><td>Genre; hidden candlelight; Caravaggesque; moral undertone</td></tr>
+<tr><td>25-9</td><td>Frans Hals</td><td>Archers of Saint Hadrian</td><td>ca. 1633</td><td>Oil on canvas</td><td>Haarlem</td><td>Militia group portrait; spontaneous brushwork; individual variety</td></tr>
+<tr><td>25-10</td><td>Frans Hals</td><td>Women Regents of the Old Men's Home</td><td>1664</td><td>Oil on canvas</td><td>Haarlem</td><td>Late; somber monochromatic; stern Calvinist women</td></tr>
+<tr><td>25-11</td><td>Judith Leyster</td><td>Self-Portrait</td><td>ca. 1630</td><td>Oil on canvas</td><td>Washington D.C.</td><td>Hals follower; depicts herself painting; confident smile</td></tr>
+<tr><td>25-12</td><td>Rembrandt van Rijn</td><td>Anatomy Lesson of Dr. Nicolaes Tulp</td><td>1632</td><td>Oil on canvas</td><td>The Hague</td><td>Innovative group portrait; corpse diagonal; triangular composition</td></tr>
+<tr><td>25-13</td><td>Rembrandt van Rijn</td><td>Night Watch</td><td>1642</td><td>Oil on canvas</td><td>Rijksmuseum, Amsterdam</td><td>Dramatic lighting; militia marching; not actually nocturnal</td></tr>
+<tr><td>25-14</td><td>Rembrandt van Rijn</td><td>Return of the Prodigal Son</td><td>ca. 1665</td><td>Oil on canvas</td><td>Hermitage, St. Petersburg</td><td>Light/shadow as emotion; father embraces son; late masterpiece</td></tr>
+<tr><td>25-15</td><td>Rembrandt van Rijn</td><td>Self-Portrait</td><td>ca. 1659&ndash;1660</td><td>Oil on canvas</td><td>Kenwood House, London</td><td>Painter with palette; "psychology of light"; dignity</td></tr>
+<tr><td>25-16</td><td>Rembrandt van Rijn</td><td>Christ with the Sick (Hundred-Guilder Print)</td><td>ca. 1649</td><td>Etching/engraving</td><td>Pierpont Morgan Library, NY</td><td>Supreme printmaking; multiple episodes; named for high price</td></tr>
+<tr><td>25-17</td><td>Aelbert Cuyp</td><td>Distant View of Dordrecht</td><td>late 1640s</td><td>Oil on canvas</td><td>National Gallery, London</td><td>Topographical Dutch landscape; dairy industry; golden light</td></tr>
+<tr><td>25-18</td><td>Jacob van Ruisdael</td><td>View of Haarlem from the Dunes at Overveen</td><td>ca. 1670</td><td>Oil on canvas</td><td>The Hague</td><td>Specific locale; windmills; low horizon; vast sky</td></tr>
+<tr><td>25-19</td><td>Johannes Vermeer</td><td>Woman Holding a Balance</td><td>ca. 1664</td><td>Oil on canvas</td><td>Washington D.C.</td><td>Empty scales; Last Judgment behind; allegory of temperate life</td></tr>
+<tr><td>25-20</td><td>Johannes Vermeer</td><td>Allegory of the Art of Painting</td><td>1670&ndash;1675</td><td>Oil on canvas</td><td>Vienna</td><td>Artist painting Clio; curtain; map; camera obscura</td></tr>
+<tr><td>25-21</td><td>Jan Steen</td><td>Feast of Saint Nicholas</td><td>ca. 1660&ndash;1665</td><td>Oil on canvas</td><td>Rijksmuseum, Amsterdam</td><td>Lively domestic chaos; moralizing undertone</td></tr>
+<tr><td>25-22</td><td>Willem Kalf</td><td>Still Life with a Late Ming Ginger Jar</td><td>1669</td><td>Oil on canvas</td><td>Indianapolis</td><td>Pronkstilleven (luxury); Chinese jar; Persian carpet; possible vanitas</td></tr>
+<tr><td>25-23</td><td>Rachel Ruysch</td><td>Flower Still Life</td><td>after 1700</td><td>Oil on canvas</td><td>Toledo Museum of Art</td><td>Lush floral; flowers from different seasons; diagonal composition</td></tr>
+</tbody></table></div>
+
+<h3>France (Louis XIV / Versailles)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>25-24</td><td>Hyacinthe Rigaud</td><td>Louis XIV</td><td>1701</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>State portrait; red heels, ermine robes; divine right; 9 ft tall</td></tr>
+<tr><td>25-25</td><td>Perrault, Le Vau, Le Brun</td><td>East Facade of the Louvre</td><td>1667&ndash;1670</td><td>Stone</td><td>Paris</td><td>French + Italian classical synthesis; paired columns; horizontal</td></tr>
+<tr><td>25-26</td><td>Hardouin-Mansart, Le Brun, Le N&ocirc;tre</td><td>Palace of Versailles</td><td>begun 1669</td><td>Stone</td><td>Versailles</td><td>Grandiose palace + gardens; three avenues to king's bedroom</td></tr>
+<tr><td>25-27</td><td>Hardouin-Mansart &amp; Le Brun</td><td>Galerie des Glaces (Hall of Mirrors)</td><td>ca. 1680</td><td>Stone/glass</td><td>Versailles</td><td>240 ft hall; mirrors opposite windows; Baroque splendor</td></tr>
+<tr><td>25-28</td><td>Girardon &amp; Regnaudin</td><td>Apollo Attended by the Nymphs of Thetis</td><td>1664&ndash;1670</td><td>Marble</td><td>Versailles</td><td>Apollo = Sun King; classical; Poussin influence</td></tr>
+<tr><td>25-30</td><td>Hardouin-Mansart</td><td>&Eacute;glise du D&ocirc;me (Invalides)</td><td>1676&ndash;1706</td><td>Stone</td><td>Paris</td><td>Domed church; French + Italian Baroque; three-shell dome</td></tr>
+<tr><td>25-31</td><td>Nicolas Poussin</td><td>Et in Arcadia Ego</td><td>ca. 1655</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>"Grand manner"; shepherds read tomb; death in paradise</td></tr>
+<tr><td>25-32</td><td>Nicolas Poussin</td><td>Landscape with Saint John on Patmos</td><td>1640</td><td>Oil on canvas</td><td>Art Institute of Chicago</td><td>Classical landscape; ruins; rational order</td></tr>
+<tr><td>25-33</td><td>Claude Lorrain</td><td>Landscape with Cattle and Peasants</td><td>1629</td><td>Oil on canvas</td><td>Philadelphia</td><td>Ideal classical landscape; golden light; atmospheric perspective</td></tr>
+<tr><td>25-34</td><td>Louis Le Nain</td><td>Family of Country People</td><td>ca. 1640</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>Peasant dignity; somber; counter to "grand manner"</td></tr>
+<tr><td>25-35</td><td>Jacques Callot</td><td>Hanging Tree (Miseries of War)</td><td>1629&ndash;1633</td><td>Etching</td><td>Paris</td><td>First realistic war horrors; mass execution; tiny precise detail</td></tr>
+<tr><td>25-36</td><td>Georges de La Tour</td><td>Adoration of the Shepherds</td><td>1645&ndash;1650</td><td>Oil on canvas</td><td>Louvre, Paris</td><td>Candlelit nighttime; Caravaggesque but gentler; no halos</td></tr>
+</tbody></table></div>
+
+<h3>England</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Artist</th><th>Title</th><th>Date</th><th>Medium</th><th>Location</th><th>Key Features</th></tr></thead>
+<tbody>
+<tr><td>25-37</td><td>Inigo Jones</td><td>Banqueting House, Whitehall</td><td>1619&ndash;1622</td><td>Stone</td><td>London</td><td>Palladian classicism; superimposed orders; horizontal roofline</td></tr>
+<tr><td>25-38</td><td>Christopher Wren</td><td>Saint Paul's Cathedral</td><td>1675&ndash;1710</td><td>Stone</td><td>London</td><td>After Great Fire; Palladio + Borromini + St. Peter's dome</td></tr>
+</tbody></table></div>
+
+<div class="pattern-box"><h4>PATTERN: Baroque Northern Europe</h4><ul>
+<li><strong>FLANDERS</strong> (Catholic) = Rubens's energy, Counter-Reformation; van Dyck court portraits</li>
+<li><strong>DUTCH REPUBLIC</strong> (Protestant, merchant) = NO church commissions &rarr; portraits, genre, landscapes, still life</li>
+<li style="padding-left:20px"><strong>Rembrandt</strong> = light/shadow as emotion; portraits, biblical, prints</li>
+<li style="padding-left:20px"><strong>Vermeer</strong> = domestic interiors; camera obscura; quiet luminous scenes</li>
+<li style="padding-left:20px"><strong>Hals</strong> = spontaneous brushwork; group portraits</li>
+<li style="padding-left:20px"><strong>Vanitas/Pronkstilleven</strong> = moral reminders amid wealth (Claesz, Kalf)</li>
+<li style="padding-left:20px"><strong>Landscape</strong> = pride in homeland (Cuyp, Ruisdael)</li>
+<li><strong>FRANCE</strong> = Louis XIV absolutism; Versailles; classicism (Poussin, Claude); "grand manner"</li>
+<li><strong>ENGLAND</strong> = Palladian architecture (Jones, Wren)</li>
+</ul></div>
+</div></div>
+
+<!-- ============ DAVIDS ============ -->
+<div class="period-section special" id="davids">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2>Comparing Davids Across Periods (Classic Exam Question!)</h2>
+</div>
+<div class="section-content">
+<div class="table-wrap david-table"><table>
+<thead><tr><th>Artist</th><th>Date</th><th>Medium</th><th>Period</th><th>Pose / Moment</th><th>Key Difference</th></tr></thead>
+<tbody>
+<tr><td><strong>Donatello</strong></td><td>ca. 1440&ndash;1460</td><td>Bronze</td><td>Early Renaissance</td><td>After victory; relaxed contrapposto</td><td>First freestanding nude since antiquity; youthful, almost feminine</td></tr>
+<tr><td><strong>Verrocchio</strong></td><td>ca. 1465&ndash;1470</td><td>Bronze</td><td>Early Renaissance</td><td>After victory; alert, proud</td><td>Older, clothed, more confident; wiry</td></tr>
+<tr><td><strong>Michelangelo</strong></td><td>1501&ndash;1504</td><td>Marble</td><td>High Renaissance</td><td>Before battle; tense anticipation</td><td>Colossal 17 ft; idealized musculature; civic symbol</td></tr>
+<tr><td><strong>Bernini</strong></td><td>1623</td><td>Marble</td><td>Baroque</td><td>During battle; mid-throw</td><td>Maximum action; facial grimace; demands surrounding space</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ============ COMPARISONS ============ -->
+<div class="period-section special" id="comparisons">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2>Top Comparison Pairs for Exam Part 1</h2>
+</div>
+<div class="section-content">
+<div class="compare-grid">
+<div class="compare-card"><h4>1. Madonna Enthroned</h4><p><strong>Cimabue</strong> (14-2) vs <strong>Giotto</strong> (14-3)</p><p class="vs">Byzantine flatness &rarr; early naturalism</p><p><strong>Giotto</strong> (14-3) vs <strong>Raphael</strong> (22-8)</p><p class="vs">Medieval &rarr; High Renaissance</p></div>
+<div class="compare-card"><h4>2. Last Supper</h4><p><strong>Castagno</strong> (21-22) vs <strong>Leonardo</strong> (22-4) vs <strong>Tintoretto</strong> (22-50)</p><p class="vs">Static &rarr; psychological &rarr; dramatic diagonal</p></div>
+<div class="compare-card"><h4>3. Annunciation</h4><p><strong>Simone Martini</strong> (14-10) vs <strong>Fra Angelico</strong> (21-21)</p><p class="vs">Gothic elegance &rarr; Renaissance simplicity</p></div>
+<div class="compare-card"><h4>4. Crucifixion / Piet&agrave; / Lamentation</h4><p><strong>Giotto</strong> (14-4) vs <strong>Michelangelo</strong> (22-12) vs <strong>Gr&uuml;newald</strong> (23-2)</p><p class="vs">Medieval narrative &rarr; ideal beauty &rarr; Northern expressionism</p></div>
+<div class="compare-card"><h4>5. David</h4><p>See Davids comparison table above</p><p class="vs">Donatello &rarr; Verrocchio &rarr; Michelangelo &rarr; Bernini</p></div>
+<div class="compare-card"><h4>6. Equestrian Statues</h4><p><strong>Donatello</strong> Gattamelata (21-15) vs <strong>Verrocchio</strong> Colleoni (21-16)</p><p class="vs">Calm dignity &rarr; fierce aggression</p></div>
+<div class="compare-card"><h4>7. Church Facades</h4><p><strong>Alberti</strong> (21-45) &rarr; <strong>della Porta</strong> (22-58) &rarr; <strong>Maderno</strong> (24-2) &rarr; <strong>Borromini</strong> (24-8)</p><p class="vs">Renaissance clarity &rarr; Mannerist &rarr; Baroque movement</p></div>
+<div class="compare-card"><h4>8. Ceiling Paintings</h4><p><strong>Mantegna</strong> (21-48) &rarr; <strong>Michelangelo</strong> (22-17) &rarr; <strong>Correggio</strong> (22-53) &rarr; <strong>Pozzo</strong> (24-23)</p><p class="vs">Early illusionism &rarr; monumental &rarr; swirling &rarr; full architectural illusion</p></div>
+<div class="compare-card"><h4>9. Altarpieces: North vs Italy</h4><p><strong>Van Eyck</strong> Ghent (20-4) vs <strong>Gentile da Fabriano</strong> (21-17)</p><p class="vs">Oil detail/symbolism vs tempera/gold/International Gothic</p></div>
+<div class="compare-card"><h4>10. Reclining Venus</h4><p><strong>Giorgione</strong> (22-31) vs <strong>Titian</strong> Venus of Urbino (22-36)</p><p class="vs">Mythological/sleeping &rarr; conscious/provocative</p></div>
+<div class="compare-card"><h4>11. Calling of Saint Matthew</h4><p><strong>Caravaggio</strong> (24-17) vs <strong>Ter Brugghen</strong> (25-7)</p><p class="vs">Italian tenebrism (sharp) &rarr; Dutch softer palette, intimate</p></div>
+<div class="compare-card"><h4>12. Group Portraits</h4><p><strong>Hals</strong> Archers (25-9) vs <strong>Rembrandt</strong> Night Watch (25-13)</p><p class="vs">Spontaneous snapshot &rarr; dramatic theatrical lighting</p></div>
+<div class="compare-card"><h4>13. Still Life Types</h4><p><strong>Claesz</strong> Vanitas (25-1) vs <strong>Kalf</strong> (25-22) vs <strong>Ruysch</strong> (25-23)</p><p class="vs">Moral warning &rarr; luxury display &rarr; natural beauty</p></div>
+<div class="compare-card"><h4>14. Landscape: Dutch vs French</h4><p><strong>Ruisdael</strong> (25-18) vs <strong>Poussin</strong> (25-32) vs <strong>Claude</strong> (25-33)</p><p class="vs">Topographical &rarr; classical/intellectual &rarr; idealized golden light</p></div>
+<div class="compare-card"><h4>15. Absolutism vs Republic</h4><p><strong>Rigaud</strong> Louis XIV (25-24) vs <strong>Hals</strong> Women Regents (25-10) vs <strong>Vermeer</strong> (25-19)</p><p class="vs">Royal propaganda &rarr; civic duty &rarr; private domestic virtue</p></div>
+</div>
+</div></div>
+
+<!-- ============ SIGNATURES ============ -->
+<div class="period-section special" id="signatures">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2>Quick-Reference: Artist &rarr; Style Signatures (for Unknowns)</h2>
+</div>
+<div class="section-content">
+<div class="table-wrap"><table class="sig-table">
+<thead><tr><th>If you see...</th><th>Think...</th></tr></thead>
+<tbody>
+<tr><td>Gold backgrounds, flat figures, Byzantine feel</td><td>Late Medieval (Cimabue, Duccio, Berlinghieri)</td></tr>
+<tr><td>Elegant line, sinuous curves, gold, Siena</td><td>Simone Martini, Sienese Gothic</td></tr>
+<tr><td>Chunky, heavy figures with real weight, fresco</td><td>Giotto</td></tr>
+<tr><td>Microscopic detail, oil, jewel-like color, Flemish interior</td><td>Van Eyck, Campin, Flemish</td></tr>
+<tr><td>Emotional anguish, compressed figures, oil on wood</td><td>Rogier van der Weyden</td></tr>
+<tr><td>Perfect linear perspective, monumental figures, fresco</td><td>Masaccio</td></tr>
+<tr><td>Flat bronze relief, schiacciato, psychological intensity</td><td>Donatello</td></tr>
+<tr><td>Mathematical precision, still figures, light</td><td>Piero della Francesca</td></tr>
+<tr><td>Flowing line, mythological, tempera, Neo-Platonic</td><td>Botticelli</td></tr>
+<tr><td>Sfumato, smoky modeling, mysterious backgrounds</td><td>Leonardo da Vinci</td></tr>
+<tr><td>Classical balance, harmony, gentle beauty, fresco</td><td>Raphael</td></tr>
+<tr><td>Muscular heroic nudes, terribilit&agrave;, marble/fresco</td><td>Michelangelo</td></tr>
+<tr><td>Rich Venetian color, oil on canvas, warm tones</td><td>Titian</td></tr>
+<tr><td>Elongated figures, strange space, pastel colors</td><td>Pontormo, Parmigianino (Mannerism)</td></tr>
+<tr><td>Cool detachment, polished surface, court portrait</td><td>Bronzino</td></tr>
+<tr><td>Sharp spotlight on dark background (tenebrism)</td><td>Caravaggio</td></tr>
+<tr><td>Theatrical, multimedia, dramatic marble sculpture</td><td>Bernini</td></tr>
+<tr><td>Undulating, concave/convex facades</td><td>Borromini</td></tr>
+<tr><td>Dramatic martyrdom, Spanish setting</td><td>Ribera, Zurbar&aacute;n</td></tr>
+<tr><td>Complex spatial puzzles, mirror, Spanish court</td><td>Vel&aacute;zquez</td></tr>
+<tr><td>Elongated mystical figures, Byzantine-influenced</td><td>El Greco</td></tr>
+<tr><td>Gruesome suffering, hospital altarpiece, German</td><td>Gr&uuml;newald</td></tr>
+<tr><td>Precise engraving, German, self-portraits</td><td>D&uuml;rer</td></tr>
+<tr><td>Muscular energy, robust figures, Flemish Baroque</td><td>Rubens</td></tr>
+<tr><td>Elegant court portraits, relaxed aristocratic poses</td><td>Van Dyck</td></tr>
+<tr><td>Spontaneous loose brushwork, Dutch group portraits</td><td>Frans Hals</td></tr>
+<tr><td>Light/shadow as emotion, self-portraits, etchings</td><td>Rembrandt</td></tr>
+<tr><td>Quiet luminous interiors, camera obscura, domestic</td><td>Vermeer</td></tr>
+<tr><td>Lively chaotic domestic genre, moralizing humor</td><td>Jan Steen</td></tr>
+<tr><td>Vanitas still life: skull, timepiece, tipped glass</td><td>Pieter Claesz</td></tr>
+<tr><td>Luxury pronkstilleven, Chinese porcelain, carpet</td><td>Willem Kalf</td></tr>
+<tr><td>Lush flower arrangements, diagonal composition</td><td>Rachel Ruysch</td></tr>
+<tr><td>Dutch topographical landscape, low horizon, vast sky</td><td>Ruisdael, Cuyp</td></tr>
+<tr><td>Classical "grand manner", ancient garb, rational</td><td>Poussin</td></tr>
+<tr><td>Golden-light ideal landscape, atmospheric haze</td><td>Claude Lorrain</td></tr>
+<tr><td>Candlelit nighttime, simplified spiritual forms</td><td>Georges de La Tour</td></tr>
+<tr><td>Grandiose French absolutism, Versailles, mirrors</td><td>Hardouin-Mansart / Le Brun</td></tr>
+<tr><td>State portrait, ermine robes, imposing king</td><td>Rigaud (Louis XIV)</td></tr>
+<tr><td>Palladian classicism in England, horizontal sweep</td><td>Inigo Jones</td></tr>
+<tr><td>English Baroque cathedral, great dome, post-fire London</td><td>Christopher Wren</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:30px">Medium Quick-Reference</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Medium</th><th>Period/Region</th><th>Key Artists</th></tr></thead>
+<tbody>
+<tr><td>Tempera on wood</td><td>Medieval Italy, Early Renaissance</td><td>Cimabue, Duccio, Giotto, Botticelli, Fra Angelico</td></tr>
+<tr><td>Fresco</td><td>All Italian periods</td><td>Giotto, Masaccio, Michelangelo, Raphael, Mantegna, Correggio, Pozzo</td></tr>
+<tr><td>Oil on wood</td><td>Northern Europe, some Italian</td><td>Van Eyck, Campin, D&uuml;rer, Holbein, Leonardo</td></tr>
+<tr><td>Oil on canvas</td><td>High Ren Venice &rarr; Baroque</td><td>Titian, Tintoretto, Caravaggio, Vel&aacute;zquez, Rubens, Rembrandt, Vermeer, Hals, Poussin</td></tr>
+<tr><td>Oil on panel</td><td>Still life (Baroque N. Europe)</td><td>Claesz, Peeters</td></tr>
+<tr><td>Bronze</td><td>Renaissance sculpture</td><td>Ghiberti, Donatello, Verrocchio, Pollaiuolo, Cellini</td></tr>
+<tr><td>Marble</td><td>Renaissance + Baroque</td><td>Donatello, Michelangelo, Bernini</td></tr>
+<tr><td>Engraving</td><td>Northern Renaissance</td><td>D&uuml;rer, Schongauer, Pollaiuolo</td></tr>
+<tr><td>Etching</td><td>Baroque (Dutch/French)</td><td>Rembrandt, Callot</td></tr>
+<tr><td>Woodcut</td><td>Northern Renaissance</td><td>D&uuml;rer, Baldung Grien, Wolgemut</td></tr>
+<tr><td>Gilded bronze</td><td>Early Renaissance</td><td>Ghiberti (Gates of Paradise), Donatello</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ============ STRATEGY ============ -->
+<div class="period-section special" id="strategy">
+<div class="section-header" onclick="toggle(this)">
+<span class="toggle open">&#9654;</span>
+<h2>Study Strategy</h2>
+</div>
+<div class="section-content">
+<div class="strategy-phase"><h4>Phase 1: Period Recognition (Days 1&ndash;2)</h4><ol>
+<li>Go through each period section above</li>
+<li>For each artwork, Google the image (artist + title) and study it for 30 seconds</li>
+<li>Focus on the VISUAL FEEL of each period &mdash; you'll start seeing patterns</li>
+</ol></div>
+<div class="strategy-phase"><h4>Phase 2: Artist Signatures (Days 3&ndash;4)</h4><ol>
+<li>Use the Style Signatures table above</li>
+<li>Cover the left column, look at right, and guess the artist</li>
+<li>Then reverse: cover right, describe what their work looks like</li>
+<li>This is KEY for the "unknowns" section</li>
+</ol></div>
+<div class="strategy-phase"><h4>Phase 3: Comparison Drilling (Days 5&ndash;6)</h4><ol>
+<li>Use the Comparison Pairs section</li>
+<li>For each pair, write out: artist, title, date, period, style differences, iconography</li>
+<li>Practice explaining WHY they're different (period, patron, purpose, technique)</li>
+</ol></div>
+<div class="strategy-phase"><h4>Phase 4: Flashcard Mode (Day 7+)</h4><ol>
+<li>Use the tables as flashcards: cover columns and quiz yourself</li>
+<li>Focus on: Artist &harr; Title &harr; Date &harr; Medium &harr; Period</li>
+<li>Pay special attention to ICONOGRAPHY for symbolic meaning</li>
+</ol></div>
+<div class="tips-box"><h4>Pro Tips for Your Exam</h4><ul>
+<li><strong>Part 1 (Compare/Contrast):</strong> Structure as: identify both &rarr; period/style &rarr; visual differences &rarr; iconography</li>
+<li><strong>Part 2 (Topic Question):</strong> Know 3&ndash;4 examples per major concept (perspective, patronage, Counter-Reformation, etc.)</li>
+<li><strong>Part 3 (Unknowns):</strong> Use the style signature table &mdash; look at medium, composition, color, subject, emotion level</li>
+<li><strong>Date ranges matter more than exact dates</strong> &mdash; know centuries and quarter-centuries</li>
+<li><strong>Remember the PROGRESSION:</strong> Medieval (flat/gold) &rarr; Early Ren (perspective) &rarr; High Ren (ideal beauty) &rarr; Mannerism (distortion) &rarr; Baroque (drama/emotion)</li>
+</ul></div>
+</div></div>
+
+</main>
+
+<script>
+function toggle(header){
+  const content=header.nextElementSibling;
+  const arrow=header.querySelector('.toggle');
+  content.classList.toggle('collapsed');
+  arrow.classList.toggle('open');
+}
+
+function doSearch(query){
+  // Remove old highlights
+  document.querySelectorAll('mark').forEach(m=>{
+    const parent=m.parentNode;
+    parent.replaceChild(document.createTextNode(m.textContent),m);
+    parent.normalize();
+  });
+  if(!query||query.length<2)return;
+
+  // Expand all sections
+  document.querySelectorAll('.section-content').forEach(s=>s.classList.remove('collapsed'));
+  document.querySelectorAll('.toggle').forEach(t=>t.classList.add('open'));
+
+  const regex=new RegExp('('+query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  const walk=document.createTreeWalker(document.querySelector('main'),NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walk.nextNode()){
+    if(walk.currentNode.parentNode.tagName!=='SCRIPT'&&walk.currentNode.parentNode.tagName!=='STYLE'&&regex.test(walk.currentNode.textContent)){
+      nodes.push(walk.currentNode);
+    }
+  }
+  nodes.forEach(node=>{
+    const span=document.createElement('span');
+    span.innerHTML=node.textContent.replace(regex,'<mark>$1</mark>');
+    node.parentNode.replaceChild(span,node);
+  });
+  // Scroll to first match
+  const first=document.querySelector('mark');
+  if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+}
+</script>
+</body>
+</html>

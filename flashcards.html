@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARTH201 Midterm Flashcards</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.header { background: #16213e; padding: 20px; text-align: center; border-bottom: 3px solid #e94560; }
+.header h1 { font-size: 1.8em; color: #e94560; }
+.header p { color: #aaa; margin-top: 5px; }
+.controls { display: flex; gap: 10px; justify-content: center; padding: 15px; flex-wrap: wrap; }
+.controls button, .controls select { padding: 8px 16px; border: 1px solid #e94560; background: #16213e; color: #eee; border-radius: 5px; cursor: pointer; font-size: 0.9em; }
+.controls button:hover, .controls select:hover { background: #e94560; }
+.controls button.active { background: #e94560; }
+.stats { text-align: center; padding: 10px; color: #aaa; font-size: 0.9em; }
+.card-container { display: flex; justify-content: center; align-items: center; padding: 20px; min-height: 500px; }
+.card { width: 90%; max-width: 700px; min-height: 400px; perspective: 1000px; cursor: pointer; }
+.card-inner { position: relative; width: 100%; min-height: 400px; transition: transform 0.6s; transform-style: preserve-3d; }
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back { position: absolute; width: 100%; min-height: 400px; backface-visibility: hidden; border-radius: 12px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.card-front { background: linear-gradient(135deg, #0f3460, #16213e); border: 2px solid #e94560; }
+.card-back { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #53d769; transform: rotateY(180deg); }
+.card-front h2 { color: #e94560; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
+.card-front .prompt { font-size: 1.1em; color: #ccc; text-align: center; }
+.card-front .hint { font-size: 0.85em; color: #666; margin-top: 15px; }
+.card-back h3 { color: #53d769; font-size: 1.3em; margin-bottom: 10px; }
+.card-back .detail { margin: 5px 0; font-size: 1em; }
+.card-back .detail span { color: #e94560; font-weight: bold; }
+.card-back .iconography { margin-top: 10px; padding: 10px; background: rgba(83, 215, 105, 0.1); border-radius: 8px; font-size: 0.9em; color: #aaa; }
+.nav-buttons { display: flex; justify-content: center; gap: 20px; padding: 20px; }
+.nav-buttons button { padding: 12px 30px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; font-weight: bold; }
+.btn-prev { background: #0f3460; color: #eee; }
+.btn-next { background: #e94560; color: #fff; }
+.btn-prev:hover { background: #1a4a8a; }
+.btn-next:hover { background: #ff6b81; }
+.mode-selector { display: flex; gap: 10px; justify-content: center; padding: 10px; flex-wrap: wrap; }
+.mode-selector button { padding: 6px 14px; border: 1px solid #444; background: #1a1a2e; color: #aaa; border-radius: 20px; cursor: pointer; font-size: 0.85em; }
+.mode-selector button.active { border-color: #e94560; color: #e94560; background: rgba(233, 69, 96, 0.1); }
+.search-box { text-align: center; padding: 10px; }
+.search-box input { padding: 8px 16px; width: 300px; max-width: 90%; border: 1px solid #444; background: #16213e; color: #eee; border-radius: 5px; font-size: 0.95em; }
+.period-tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: bold; margin-bottom: 10px; }
+.medieval { background: rgba(255, 165, 0, 0.2); color: #ffa500; border: 1px solid #ffa500; }
+.northern { background: rgba(0, 191, 255, 0.2); color: #00bfff; border: 1px solid #00bfff; }
+.early-ren { background: rgba(50, 205, 50, 0.2); color: #32cd32; border: 1px solid #32cd32; }
+.high-ren { background: rgba(147, 112, 219, 0.2); color: #9370db; border: 1px solid #9370db; }
+.mannerism { background: rgba(255, 105, 180, 0.2); color: #ff69b4; border: 1px solid #ff69b4; }
+.baroque { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
+.click-hint { color: #555; font-size: 0.8em; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+table th { background: #16213e; color: #e94560; padding: 8px; text-align: left; font-size: 0.85em; }
+table td { padding: 8px; border-bottom: 1px solid #333; font-size: 0.85em; }
+table tr:hover { background: rgba(233, 69, 96, 0.05); }
+.table-view { padding: 20px; max-width: 1200px; margin: 0 auto; display: none; }
+.table-view h2 { color: #e94560; margin: 20px 0 10px; }
+#viewToggle { position: fixed; top: 10px; right: 10px; z-index: 100; }
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>ARTH201 Midterm Flashcards</h1>
+<p>Click card to flip | Arrow keys or buttons to navigate | ~163 artworks</p>
+</div>
+
+<button id="viewToggle" onclick="toggleView()" style="padding:8px 16px;border:1px solid #e94560;background:#16213e;color:#eee;border-radius:5px;cursor:pointer;">Switch to Table View</button>
+
+<div id="flashcardView">
+<div class="mode-selector">
+<button class="active" onclick="setMode('all',this)">All Periods</button>
+<button onclick="setMode('medieval',this)">Medieval</button>
+<button onclick="setMode('northern',this)">Northern Ren</button>
+<button onclick="setMode('early-ren',this)">Early Renaissance</button>
+<button onclick="setMode('high-ren',this)">High Renaissance</button>
+<button onclick="setMode('mannerism',this)">Mannerism</button>
+<button onclick="setMode('baroque',this)">Baroque</button>
+</div>
+
+<div class="controls">
+<button onclick="shuffleCards()" title="Randomize order">Shuffle</button>
+<select id="quizMode" onchange="setQuizMode(this.value)">
+<option value="show-image">Mode: See Title, Guess Details</option>
+<option value="show-details">Mode: See Details, Name the Work</option>
+<option value="identify-period">Mode: Identify the Period/Style</option>
+</select>
+</div>
+
+<div class="stats" id="stats">Card 1 of 100</div>
+
+<div class="card-container">
+<div class="card" id="card" onclick="flipCard()">
+<div class="card-inner">
+<div class="card-front" id="cardFront"></div>
+<div class="card-back" id="cardBack"></div>
+</div>
+</div>
+</div>
+
+<div class="nav-buttons">
+<button class="btn-prev" onclick="prevCard()">Previous</button>
+<button class="btn-next" onclick="nextCard()">Next</button>
+</div>
+</div>
+
+<div class="table-view" id="tableView">
+<h2>Complete Artwork Reference Table</h2>
+<p style="color:#aaa;margin-bottom:15px;">Sortable by clicking column headers. Use Ctrl+F to search.</p>
+<table id="artworkTable">
+<thead>
+<tr>
+<th onclick="sortTable(0)">Period</th>
+<th onclick="sortTable(1)">Artist</th>
+<th onclick="sortTable(2)">Title</th>
+<th onclick="sortTable(3)">Date</th>
+<th onclick="sortTable(4)">Medium</th>
+<th onclick="sortTable(5)">Location</th>
+<th onclick="sortTable(6)">Key Features</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+<script>
+const artworks = [
+// MEDIEVAL ITALY
+{period:"medieval",artist:"Bonaventura Berlinghieri",title:"Saint Francis Altarpiece",date:"1235",medium:"Tempera on wood",location:"Pescia, Italy",features:"Earliest depiction of St. Francis; Byzantine style; flat gold background; flanking miracle scenes",fig:"14-1"},
+{period:"medieval",artist:"Cimabue",title:"Madonna Enthroned with Angels and Prophets",date:"ca. 1280-1290",medium:"Tempera on wood",location:"Florence (Santa Trinita)",features:"Byzantine but hints of 3D; hierarchical scale; enthroned Virgin; gold ground",fig:"14-2"},
+{period:"medieval",artist:"Giotto di Bondone",title:"Madonna Enthroned (Ognissanti Madonna)",date:"ca. 1310",medium:"Tempera on wood",location:"Florence",features:"Naturalistic weight/volume; throne with depth; angels in 3D space; compare to Cimabue",fig:"14-3"},
+{period:"medieval",artist:"Giotto di Bondone",title:"Lamentation (Arena Chapel)",date:"ca. 1305",medium:"Fresco",location:"Padua, Italy",features:"Emotional realism; grief-stricken figures; diagonal composition to Christ; landscape setting",fig:"14-4"},
+{period:"medieval",artist:"Giotto di Bondone",title:"Entry into Jerusalem (Arena Chapel)",date:"ca. 1305",medium:"Fresco",location:"Padua",features:"Narrative clarity; crowd scene; architectural backdrop",fig:"14-5"},
+{period:"medieval",artist:"Giotto di Bondone",title:"Betrayal of Jesus (Arena Chapel)",date:"ca. 1305",medium:"Fresco",location:"Padua",features:"Dramatic confrontation; Judas kiss; compressed emotional figures",fig:"14-6"},
+{period:"medieval",artist:"Duccio di Buoninsegna",title:"Maesta (Virgin and Child Enthroned)",date:"1308-1311",medium:"Tempera and gold on wood",location:"Siena Cathedral",features:"Sienese style: elegant, decorative, flowing lines; rich gold; large altarpiece",fig:"14-8"},
+{period:"medieval",artist:"Duccio di Buoninsegna",title:"Betrayal of Jesus (back of Maesta)",date:"1308-1311",medium:"Tempera on wood",location:"Siena",features:"Compare to Giotto's version: more decorative, crowded, less monumental",fig:"14-9"},
+{period:"medieval",artist:"Simone Martini",title:"Annunciation",date:"1333",medium:"Tempera and gold on wood",location:"Siena",features:"International Gothic elegance; sinuous lines; gold ground; Virgin recoils from Gabriel",fig:"14-10"},
+{period:"medieval",artist:"Pietro Lorenzetti",title:"Birth of the Virgin",date:"1342",medium:"Tempera on wood",location:"Siena",features:"Innovative triptych: scene extends across panels as unified space; architectural depth",fig:"14-11"},
+{period:"medieval",artist:"Ambrogio Lorenzetti",title:"Allegory/Effects of Good Government",date:"1338-1339",medium:"Fresco",location:"Palazzo Pubblico, Siena",features:"Secular political subject; panoramic city/countryside; earliest landscape painting",fig:"14-12"},
+
+// NORTHERN EUROPE
+{period:"northern",artist:"Claus Sluter",title:"Well of Moses",date:"1395-1406",medium:"Painted stone",location:"Dijon, France",features:"Monumental prophets; emotional realism; weighty drapery; Burgundian court",fig:"20-1"},
+{period:"northern",artist:"Limbourg Brothers",title:"Les Tres Riches Heures du Duc de Berry",date:"1413-1416",medium:"Ink/tempera on vellum",location:"France",features:"Illuminated manuscript; International Gothic; calendar scenes; aristocratic life",fig:"20-2"},
+{period:"northern",artist:"Robert Campin (Master of Flemalle)",title:"Merode Altarpiece (Annunciation Triptych)",date:"ca. 1425-1428",medium:"Oil on wood",location:"Tournai, Flanders",features:"Disguised symbolism: lilies, candle, mousetrap; domestic Annunciation setting",fig:"20-3"},
+{period:"northern",artist:"Jan van Eyck",title:"Ghent Altarpiece (Adoration of the Mystic Lamb)",date:"1432",medium:"Oil on wood",location:"Ghent, Flanders",features:"Monumental polyptych; meticulous detail; revolutionary oil technique; theological program",fig:"20-4"},
+{period:"northern",artist:"Jan van Eyck",title:"Giovanni Arnolfini and His Wife",date:"1434",medium:"Oil on wood",location:"Bruges, Flanders",features:"Disguised symbolism: convex mirror, single candle, dog (fidelity), removed shoes (holy ground)",fig:"20-6"},
+{period:"northern",artist:"Jan van Eyck",title:"Man in a Red Turban (Self-Portrait?)",date:"1433",medium:"Oil on wood",location:"Bruges",features:"Three-quarter view; extraordinary detail; inscribed frame; possible self-portrait",fig:"20-7"},
+{period:"northern",artist:"Rogier van der Weyden",title:"Deposition (Descent from the Cross)",date:"ca. 1435",medium:"Oil on wood",location:"Brussels/Leuven",features:"Emotional intensity; compressed shallow space; Mary echoes Christ's pose; gold background",fig:"20-8"},
+{period:"northern",artist:"Rogier van der Weyden",title:"Saint Luke Drawing the Virgin",date:"ca. 1435-1440",medium:"Oil on wood",location:"Brussels",features:"Patron saint of painters; Rogier may be Luke; landscape through window",fig:"20-9"},
+{period:"northern",artist:"Dirk Bouts",title:"Last Supper (Altarpiece of the Holy Sacrament)",date:"1464-1468",medium:"Oil on wood",location:"Leuven, Flanders",features:"One-point perspective (early Northern example); Eucharistic focus",fig:"20-11"},
+{period:"northern",artist:"Hugo van der Goes",title:"Portinari Altarpiece (Adoration of Shepherds)",date:"ca. 1473-1478",medium:"Oil on wood",location:"Ghent/Florence",features:"Large scale; naturalistic shepherds; symbolic flowers (iris, columbine); sent to Florence",fig:"20-12"},
+{period:"northern",artist:"Hans Memling",title:"Virgin with Saints and Angels (Saint John Altarpiece)",date:"1479",medium:"Oil on wood",location:"Bruges",features:"Serene, balanced; mystic marriage of Saint Catherine; luminous color",fig:"20-13"},
+{period:"northern",artist:"Jean Fouquet",title:"Melun Diptych",date:"ca. 1452",medium:"Oil/tempera on wood",location:"Tours, France",features:"Flemish detail + Italian monumentality; idealized Virgin possibly modeled on Agnes Sorel",fig:"20-15"},
+{period:"northern",artist:"Konrad Witz",title:"Miraculous Draft of Fish",date:"1444",medium:"Oil on wood",location:"Geneva, Switzerland",features:"First topographical landscape: recognizable Lake Geneva; biblical scene in real location",fig:"20-16"},
+{period:"northern",artist:"Veit Stoss",title:"Death and Assumption of the Virgin",date:"1477-1489",medium:"Painted/gilded lime wood",location:"Krakow, Poland",features:"Monumental wooden altarpiece; Late Gothic expressiveness; carved figures",fig:"20-17"},
+{period:"northern",artist:"Martin Schongauer",title:"Saint Anthony Tormented by Demons",date:"ca. 1480-1490",medium:"Engraving",location:"Colmar, Germany",features:"Masterful engraving; fantastic demons; influenced young Michelangelo",fig:"20-19"},
+
+// EARLY RENAISSANCE (QUATTROCENTO)
+{period:"early-ren",artist:"Filippo Brunelleschi",title:"Sacrifice of Isaac (competition panel)",date:"1401-1402",medium:"Gilded bronze",location:"Florence",features:"Baptistery door competition; emotional, angular; lost to Ghiberti",fig:"21-2"},
+{period:"early-ren",artist:"Lorenzo Ghiberti",title:"Sacrifice of Isaac (competition panel)",date:"1401-1402",medium:"Gilded bronze",location:"Florence",features:"WON the competition; graceful classical pose; Isaac like Greek torso",fig:"21-3"},
+{period:"early-ren",artist:"Donatello",title:"Saint Mark",date:"1411-1413",medium:"Marble",location:"Or San Michele, Florence",features:"Classical contrapposto; first Renaissance statue with convincing weight shift",fig:"21-5"},
+{period:"early-ren",artist:"Donatello",title:"Saint George",date:"ca. 1410-1415",medium:"Marble",location:"Or San Michele, Florence",features:"Alert warrior; pioneering atmospheric perspective relief below",fig:"21-6"},
+{period:"early-ren",artist:"Donatello",title:"Feast of Herod",date:"ca. 1423-1427",medium:"Gilded bronze",location:"Siena Baptistery",features:"Linear perspective in relief sculpture; dramatic recession; emotional reaction",fig:"21-8"},
+{period:"early-ren",artist:"Lorenzo Ghiberti",title:"Gates of Paradise (east doors, Baptistery)",date:"1425-1452",medium:"Gilded bronze",location:"Florence",features:"10 pictorial panels; linear + atmospheric perspective; named by Michelangelo",fig:"21-10"},
+{period:"early-ren",artist:"Donatello",title:"David",date:"ca. 1440-1460",medium:"Bronze",location:"Florence",features:"First freestanding nude male since antiquity; youthful contrapposto; Medici",fig:"21-11"},
+{period:"early-ren",artist:"Andrea del Verrocchio",title:"David",date:"ca. 1465-1470",medium:"Bronze",location:"Florence",features:"Compare Donatello: older, alert, clothed, proud; wiry energy",fig:"21-12"},
+{period:"early-ren",artist:"Antonio del Pollaiuolo",title:"Hercules and Antaeus",date:"ca. 1470-1475",medium:"Bronze",location:"Florence",features:"Violent action; anatomical study; struggle and energy",fig:"21-13"},
+{period:"early-ren",artist:"Donatello",title:"Gattamelata (equestrian statue)",date:"ca. 1445-1453",medium:"Bronze",location:"Padua",features:"First large equestrian bronze since antiquity; references Marcus Aurelius; calm dignity",fig:"21-15"},
+{period:"early-ren",artist:"Andrea del Verrocchio",title:"Bartolomeo Colleoni (equestrian)",date:"ca. 1481-1495",medium:"Bronze",location:"Venice",features:"More aggressive than Gattamelata; fierce expression; dynamic pose",fig:"21-16"},
+{period:"early-ren",artist:"Gentile da Fabriano",title:"Adoration of the Magi",date:"1423",medium:"Tempera on wood",location:"Florence",features:"International Gothic: lavish gold, costumes, exotic animals; Strozzi Chapel",fig:"21-17"},
+{period:"early-ren",artist:"Masaccio",title:"Tribute Money (Brancacci Chapel)",date:"ca. 1424-1427",medium:"Fresco",location:"Florence",features:"Revolutionary: atmospheric perspective, chiaroscuro, monumental figures, continuous narrative",fig:"21-18"},
+{period:"early-ren",artist:"Masaccio",title:"Expulsion of Adam and Eve from Eden",date:"ca. 1424-1427",medium:"Fresco",location:"Florence (Brancacci Chapel)",features:"Raw emotion; naturalistic nudes; anguish and shame",fig:"21-19"},
+{period:"early-ren",artist:"Masaccio",title:"Holy Trinity",date:"ca. 1424-1427",medium:"Fresco",location:"Santa Maria Novella, Florence",features:"First use of Brunelleschi's linear perspective in painting; trompe l'oeil; skeleton memento mori",fig:"21-20"},
+{period:"early-ren",artist:"Fra Angelico",title:"Annunciation",date:"ca. 1438-1447",medium:"Fresco",location:"San Marco, Florence",features:"Simple, direct, devotional; gentle colors; for monks' cells; pure and humble",fig:"21-21"},
+{period:"early-ren",artist:"Andrea del Castagno",title:"Last Supper",date:"1447",medium:"Fresco",location:"Sant'Apollonia, Florence",features:"Dramatic marble paneled setting; Judas isolated on opposite side of table",fig:"21-22"},
+{period:"early-ren",artist:"Paolo Uccello",title:"Battle of San Romano",date:"ca. 1435-1460",medium:"Tempera on wood",location:"Florence",features:"Obsessive perspective; foreshortened fallen soldiers; decorative elements",fig:"21-23"},
+{period:"early-ren",artist:"Fra Filippo Lippi",title:"Madonna and Child with Angels",date:"ca. 1460-1465",medium:"Tempera on wood",location:"Florence",features:"Humanized Madonna; gentle; landscape; influenced Botticelli",fig:"21-24"},
+{period:"early-ren",artist:"Piero della Francesca",title:"Resurrection",date:"ca. 1463-1465",medium:"Fresco",location:"Borgo San Sepolcro",features:"Triumphant muscular Christ; sleeping soldiers; landscape death/rebirth symbolism",fig:"21-25"},
+{period:"early-ren",artist:"Domenico Ghirlandaio",title:"Birth of the Virgin",date:"ca. 1485-1490",medium:"Fresco",location:"Santa Maria Novella, Florence",features:"Wealthy Florentine women in contemporary dress; secularization of sacred scene",fig:"21-26"},
+{period:"early-ren",artist:"Sandro Botticelli",title:"Primavera (Spring)",date:"ca. 1482",medium:"Tempera on wood",location:"Florence (Uffizi)",features:"Mythological: Venus, Three Graces, Mercury, Flora; Medici; Neo-Platonic",fig:"21-28"},
+{period:"early-ren",artist:"Sandro Botticelli",title:"Birth of Venus",date:"ca. 1484-1486",medium:"Tempera on canvas",location:"Florence (Uffizi)",features:"Revival of classical nude; Venus on shell; Zephyrus/Chloris; Neo-Platonic beauty",fig:"21-1"},
+{period:"early-ren",artist:"Perugino",title:"Christ Delivering the Keys to Saint Peter",date:"1481-1483",medium:"Fresco",location:"Sistine Chapel, Vatican",features:"Central-plan temple; perfect perspective; papal authority symbolism",fig:"21-41"},
+{period:"early-ren",artist:"Luca Signorelli",title:"The Damned Cast into Hell",date:"1499-1502",medium:"Fresco",location:"Orvieto Cathedral",features:"Muscular nudes; violent demons; influenced Michelangelo's Last Judgment",fig:"21-42"},
+{period:"early-ren",artist:"Piero della Francesca",title:"Flagellation",date:"ca. 1455-1465",medium:"Oil and tempera on wood",location:"Urbino",features:"Perfect perspective; mysterious foreground figures; mathematical precision",fig:"21-43"},
+{period:"early-ren",artist:"Piero della Francesca",title:"Battista Sforza and Federico da Montefeltro",date:"ca. 1472-1474",medium:"Oil/tempera on wood",location:"Urbino",features:"Profile portrait diptych; landscape backgrounds; power couple",fig:"21-44"},
+{period:"early-ren",artist:"Filippo Brunelleschi",title:"Ospedale degli Innocenti (loggia)",date:"begun 1419",medium:"Stone/stucco",location:"Florence",features:"First Renaissance building; classical columns; modular design; roundels",fig:"21-30"},
+{period:"early-ren",artist:"Filippo Brunelleschi",title:"San Lorenzo (interior)",date:"ca. 1421-1460",medium:"Stone",location:"Florence",features:"Mathematical clarity; Corinthian columns; pietra serena gray vs white walls",fig:"21-31"},
+{period:"early-ren",artist:"Leon Battista Alberti",title:"Sant'Andrea (facade)",date:"designed 1470",medium:"Stone",location:"Mantua",features:"Triumphal arch + temple front; colossal order; Roman motifs",fig:"21-45"},
+{period:"early-ren",artist:"Andrea Mantegna",title:"Camera Picta (ceiling/oculus)",date:"1465-1474",medium:"Fresco",location:"Palazzo Ducale, Mantua",features:"Di sotto in su (seen from below); first illusionistic ceiling; putti peer down through oculus",fig:"21-48"},
+{period:"early-ren",artist:"Andrea Mantegna",title:"Foreshortened Christ (Lamentation)",date:"ca. 1500",medium:"Tempera on canvas",location:"Milan",features:"Extreme foreshortening; emotional restraint; anatomical virtuosity",fig:"21-50"},
+{period:"early-ren",artist:"Giovanni Bellini",title:"Saint Francis in the Desert",date:"ca. 1477-1480",medium:"Oil on wood",location:"Venice",features:"Luminous landscape; Franciscan mysticism; pioneering Venetian light/color",fig:"21-40"},
+
+// HIGH RENAISSANCE
+{period:"high-ren",artist:"Leonardo da Vinci",title:"Madonna of the Rocks",date:"ca. 1483-1490",medium:"Oil on wood/canvas",location:"Milan/Paris",features:"Sfumato; pyramidal composition; grotto; chiaroscuro; mysterious atmosphere",fig:"22-2"},
+{period:"high-ren",artist:"Leonardo da Vinci",title:"Last Supper",date:"ca. 1495-1498",medium:"Oil/tempera on plaster",location:"Santa Maria delle Grazie, Milan",features:"Experimental medium (deteriorated); one-point perspective; psychological drama of reactions",fig:"22-4"},
+{period:"high-ren",artist:"Leonardo da Vinci",title:"Mona Lisa",date:"ca. 1503-1505",medium:"Oil on wood",location:"Florence/Louvre",features:"Sfumato; mysterious smile; atmospheric landscape; three-quarter pose; most famous painting",fig:"22-5"},
+{period:"high-ren",artist:"Raphael",title:"Marriage of the Virgin",date:"1504",medium:"Oil on wood",location:"Citta di Castello",features:"Perugino influence; central-plan temple; perfect perspective recession",fig:"22-7"},
+{period:"high-ren",artist:"Raphael",title:"Madonna of the Meadows",date:"1505-1506",medium:"Oil on wood",location:"Florence",features:"Pyramidal composition; Leonardo influence; sfumato; gentle landscape",fig:"22-8"},
+{period:"high-ren",artist:"Raphael",title:"School of Athens",date:"1509-1511",medium:"Fresco",location:"Stanza della Segnatura, Vatican",features:"Plato (up) & Aristotle (out); barrel vault; portraits of contemporaries as philosophers",fig:"22-9"},
+{period:"high-ren",artist:"Raphael",title:"Galatea",date:"ca. 1513",medium:"Fresco",location:"Villa Farnesina, Rome",features:"Mythological; dynamic spiral composition; classical beauty; Neoplatonic",fig:"22-11"},
+{period:"high-ren",artist:"Michelangelo",title:"Pieta",date:"ca. 1498-1500",medium:"Marble",location:"St. Peter's, Vatican",features:"Young Virgin holding dead Christ; polished marble; pyramidal; beauty from suffering",fig:"22-12"},
+{period:"high-ren",artist:"Michelangelo",title:"David",date:"1501-1504",medium:"Marble",location:"Florence",features:"17 ft colossal; tense anticipation before battle; veins/muscles; civic symbol; idealized",fig:"22-13"},
+{period:"high-ren",artist:"Michelangelo",title:"Moses",date:"ca. 1513-1515",medium:"Marble",location:"San Pietro in Vincoli, Rome",features:"Tomb of Julius II; powerful patriarch; horns (mistranslation of rays); terribilita",fig:"22-14"},
+{period:"high-ren",artist:"Michelangelo",title:"Tomb of Giuliano de' Medici",date:"1519-1534",medium:"Marble",location:"New Sacristy, San Lorenzo, Florence",features:"Night and Day allegorical reclining figures; architectural setting; meditation on time",fig:"22-16"},
+{period:"high-ren",artist:"Michelangelo",title:"Sistine Chapel Ceiling (Creation of Adam)",date:"1508-1512",medium:"Fresco",location:"Vatican, Rome",features:"300+ figures; Genesis; architectural framework; near-touching fingers = most iconic image",fig:"22-17/18"},
+{period:"high-ren",artist:"Michelangelo",title:"Last Judgment (Sistine Chapel)",date:"1536-1541",medium:"Fresco",location:"Vatican",features:"Terrifying; muscular nudes; Christ as judge; self-portrait on St. Bartholomew's flayed skin",fig:"22-19"},
+{period:"high-ren",artist:"Bramante",title:"Tempietto",date:"1502",medium:"Stone",location:"San Pietro in Montorio, Rome",features:"Perfect central plan; Doric columns; marks St. Peter's crucifixion site; ideal Renaissance form",fig:"22-21"},
+{period:"high-ren",artist:"Giovanni Bellini",title:"San Zaccaria Altarpiece",date:"1505",medium:"Oil on wood/canvas",location:"Venice",features:"Sacra conversazione; unified warm light; harmonious color; serene",fig:"22-29"},
+{period:"high-ren",artist:"Giorgione",title:"The Tempest",date:"ca. 1509-1510",medium:"Oil on canvas",location:"Venice",features:"First 'poetic' landscape; mood over narrative; mysterious subject; Venetian color",fig:"22-31"},
+{period:"high-ren",artist:"Titian",title:"Assumption of the Virgin",date:"1515-1518",medium:"Oil on wood",location:"Frari Church, Venice",features:"Monumental; brilliant color; dynamic upward movement; foreshadows Baroque",fig:"22-33"},
+{period:"high-ren",artist:"Titian",title:"Pesaro Madonna",date:"1519-1526",medium:"Oil on canvas",location:"Frari Church, Venice",features:"Revolutionary asymmetrical composition; diagonal; columns; donor portraits",fig:"22-34"},
+{period:"high-ren",artist:"Titian",title:"Venus of Urbino",date:"1536-1538",medium:"Oil on canvas",location:"Florence/Urbino",features:"Reclining nude; direct gaze; domestic setting; sensuous; set standard for reclining nudes",fig:"22-36"},
+{period:"high-ren",artist:"Correggio",title:"Assumption of the Virgin",date:"1526-1530",medium:"Fresco",location:"Parma Cathedral",features:"Illusionistic dome; swirling figures; foreshadows Baroque ceiling painting",fig:"22-53"},
+
+// MANNERISM
+{period:"mannerism",artist:"Pontormo",title:"Entombment of Christ (Deposition)",date:"1525-1528",medium:"Oil on wood",location:"Santa Felicita, Florence",features:"Pastel colors; swirling composition; no ground plane; elongated weightless figures",fig:"22-38"},
+{period:"mannerism",artist:"Parmigianino",title:"Madonna with the Long Neck",date:"1534-1540",medium:"Oil on wood",location:"Parma",features:"Extreme elongation; tiny prophet; unfinished column; elegance over naturalism",fig:"22-39"},
+{period:"mannerism",artist:"Parmigianino",title:"Self-Portrait in a Convex Mirror",date:"1524",medium:"Oil on wood",location:"Vienna",features:"Distorted hand; Mannerist self-awareness; convex mirror virtuosity",fig:"22-40"},
+{period:"mannerism",artist:"Bronzino",title:"Venus, Cupid, Folly, and Time",date:"ca. 1546",medium:"Oil on wood",location:"London",features:"Allegory of deceit; erotic; cold colors; intellectual puzzle; Mannerist ambiguity",fig:"22-41"},
+{period:"mannerism",artist:"Bronzino",title:"Eleonora of Toledo and Giovanni de' Medici",date:"ca. 1546",medium:"Oil on wood",location:"Florence",features:"Formal Medici court portrait; intricate brocade detail; cool detachment",fig:"22-43"},
+{period:"mannerism",artist:"Sofonisba Anguissola",title:"Portrait of the Artist's Sisters and Brother",date:"ca. 1555",medium:"Oil on wood",location:"Cremona, Italy",features:"Leading woman artist; informal group portrait; natural relaxed poses",fig:"22-44"},
+{period:"mannerism",artist:"Tintoretto",title:"Last Supper",date:"1594",medium:"Oil on canvas",location:"San Giorgio Maggiore, Venice",features:"Dramatic diagonal; supernatural angelic light; Counter-Reformation; compare Leonardo",fig:"22-50"},
+{period:"mannerism",artist:"Veronese",title:"Christ in the House of Levi",date:"1573",medium:"Oil on canvas",location:"Venice",features:"Massive 18x42 ft; theatrical loggia setting; Inquisition controversy over secular figures",fig:"22-51"},
+{period:"mannerism",artist:"Cellini",title:"Saltcellar of Francis I",date:"1540-1543",medium:"Gold, enamel",location:"Vienna",features:"Lavish; elongated figures; virtuoso goldsmith work; Neptune and Earth",fig:"22-45"},
+{period:"mannerism",artist:"Giambologna",title:"Abduction of the Sabine Women",date:"1579-1583",medium:"Marble",location:"Loggia dei Lanzi, Florence",features:"Figura serpentinata: spiraling upward; multiple viewpoints; first large-scale group",fig:"22-46"},
+{period:"mannerism",artist:"Giulio Romano",title:"Palazzo del Te (Fall of the Giants)",date:"1525-1535",medium:"Fresco/stone",location:"Mantua",features:"Mannerist architecture breaking rules; dramatic ceiling fresco of giants crashing down",fig:"22-47/49"},
+{period:"mannerism",artist:"Palladio",title:"Villa Rotonda",date:"ca. 1550-1570",medium:"Stone",location:"Vicenza",features:"Four identical temple facades; dome; mathematical harmony; hugely influential worldwide",fig:"22-54"},
+{period:"mannerism",artist:"Palladio",title:"San Giorgio Maggiore",date:"begun 1566",medium:"Stone",location:"Venice",features:"Interlocking temple fronts; white facade; classical interior; view across lagoon",fig:"22-56"},
+{period:"mannerism",artist:"Vignola/della Porta",title:"Il Gesu (facade and interior)",date:"1568-1584",medium:"Stone",location:"Rome",features:"Mother church of Jesuits; wide nave; side chapels; influential facade; Counter-Reformation",fig:"22-58"},
+{period:"mannerism",artist:"El Greco",title:"Burial of Count Orgaz",date:"1586",medium:"Oil on canvas",location:"Toledo, Spain",features:"Two zones: earthly (realistic) / heavenly (elongated Mannerist); Spanish mysticism",fig:"23-22"},
+{period:"mannerism",artist:"El Greco",title:"View of Toledo",date:"ca. 1610",medium:"Oil on canvas",location:"Toledo, Spain",features:"Dramatic expressionistic landscape; stormy sky; emotional intensity",fig:"23-24"},
+
+// NORTHERN RENAISSANCE/MANNERISM
+{period:"northern",artist:"Albrecht Durer",title:"Self-Portrait",date:"1500",medium:"Oil on wood",location:"Nuremberg, Germany",features:"Christ-like frontal pose; artist as divinely inspired genius; inscribed age 28",fig:"23-3"},
+{period:"northern",artist:"Albrecht Durer",title:"Fall of Man (Adam and Eve)",date:"1504",medium:"Engraving",location:"Nuremberg",features:"Ideal proportions; four temperaments as animals; Northern detail + Italian idealism",fig:"23-4"},
+{period:"northern",artist:"Albrecht Durer",title:"Melencolia I",date:"1514",medium:"Engraving",location:"Nuremberg",features:"Artistic melancholy; tools of creation; magic square; hourglass; bat; complex symbolism",fig:"23-5"},
+{period:"northern",artist:"Albrecht Durer",title:"Four Apostles",date:"1526",medium:"Oil on wood",location:"Nuremberg",features:"Lutheran sympathies; John/Peter left, Mark/Paul right; Bible as authority",fig:"23-6"},
+{period:"northern",artist:"Matthias Grunewald",title:"Isenheim Altarpiece",date:"ca. 1512-1515",medium:"Oil on wood",location:"Isenheim, France",features:"Intense suffering for hospital patients; gruesome Crucifixion; miraculous Resurrection",fig:"23-2"},
+{period:"northern",artist:"Hans Holbein the Younger",title:"The French Ambassadors",date:"1533",medium:"Oil on wood",location:"England",features:"Anamorphic skull; symbols of learning and mortality; double portrait; memento mori",fig:"23-12"},
+{period:"northern",artist:"Pieter Bruegel the Elder",title:"Hunters in the Snow",date:"1565",medium:"Oil on wood",location:"Antwerp",features:"Landscape masterpiece; winter; monthly cycle; panoramic birds-eye view",fig:"23-20"},
+
+// BAROQUE
+{period:"baroque",artist:"Carlo Maderno",title:"Santa Susanna (facade)",date:"1597-1603",medium:"Stone",location:"Rome",features:"Earliest Baroque facade; dramatic vertical thrust; projecting columns build to center",fig:"24-2"},
+{period:"baroque",artist:"Carlo Maderno",title:"Saint Peter's (facade)",date:"1606-1612",medium:"Stone",location:"Vatican, Rome",features:"Expanded Santa Susanna; added nave bays; breadth counterbalances verticality",fig:"24-3"},
+{period:"baroque",artist:"Bernini",title:"Saint Peter's Piazza (colonnade)",date:"1656-1667",medium:"Stone",location:"Vatican",features:"Oval piazza; welcoming arms of the Church; 4 rows Tuscan columns; obelisk center",fig:"24-4"},
+{period:"baroque",artist:"Bernini",title:"Baldacchino (Saint Peter's)",date:"1624-1633",medium:"Bronze",location:"Vatican",features:"100 ft tall; spiral columns; Barberini bees; marks Peter's tomb; orb and cross",fig:"24-5"},
+{period:"baroque",artist:"Bernini",title:"David",date:"1623",medium:"Marble",location:"Galleria Borghese, Rome",features:"Mid-throw action; facial grimace; demands surrounding space; compare all 4 Davids",fig:"24-6"},
+{period:"baroque",artist:"Bernini",title:"Ecstasy of Saint Teresa",date:"1647-1652",medium:"Marble",location:"Cornaro Chapel, Santa Maria della Vittoria, Rome",features:"Theatrical: hidden light, Cornaro audience; spiritual + physical ecstasy; multimedia masterpiece",fig:"24-1"},
+{period:"baroque",artist:"Bernini",title:"Fountain of the Four Rivers",date:"1648-1651",medium:"Travertine/marble",location:"Piazza Navona, Rome",features:"Four rivers = four continents; obelisk; theatrical water; Danube, Nile, Ganges, Plata",fig:"24-7"},
+{period:"baroque",artist:"Borromini",title:"San Carlo alle Quattro Fontane",date:"1638-1641",medium:"Stone",location:"Rome",features:"Undulating concave/convex facade; oval plan; coffered dome; revolutionary Baroque",fig:"24-8"},
+{period:"baroque",artist:"Borromini",title:"Sant'Ivo alla Sapienza",date:"begun 1642",medium:"Stone",location:"Rome",features:"Star-shaped plan; concave/convex exterior; dome grows organically from walls",fig:"24-11"},
+{period:"baroque",artist:"Guarino Guarini",title:"Chapel of the Holy Shroud (dome)",date:"1667-1694",medium:"Stone",location:"Turin",features:"Kaleidoscopic interlocking arches; trompe l'oeil height; mathematical precision",fig:"24-14"},
+{period:"baroque",artist:"Annibale Carracci",title:"Flight into Egypt",date:"1603-1604",medium:"Oil on canvas",location:"Rome",features:"Ideal classical landscape; small figures; Venetian color influence; pastoral",fig:"24-15"},
+{period:"baroque",artist:"Annibale Carracci",title:"Loves of the Gods (Palazzo Farnese ceiling)",date:"1597-1601",medium:"Fresco",location:"Rome",features:"Quadro riportato: framed paintings on ceiling; mythological; Sistine influence",fig:"24-16"},
+{period:"baroque",artist:"Caravaggio",title:"Calling of Saint Matthew",date:"ca. 1597-1601",medium:"Oil on canvas",location:"San Luigi dei Francesi, Rome",features:"Tenebrism: dramatic spotlight; contemporary dress; divine light = Christ's gesture; tavern",fig:"24-17"},
+{period:"baroque",artist:"Caravaggio",title:"Conversion of Saint Paul",date:"ca. 1601",medium:"Oil on canvas",location:"Santa Maria del Popolo, Rome",features:"Dramatic foreshortening; horse dominates; Paul fallen; blinding divine light",fig:"24-18"},
+{period:"baroque",artist:"Artemisia Gentileschi",title:"Judith Slaying Holofernes",date:"ca. 1614-1620",medium:"Oil on canvas",location:"Naples/Florence",features:"Leading woman artist; Caravaggesque tenebrism; violent action; strong female hero",fig:"24-19"},
+{period:"baroque",artist:"Artemisia Gentileschi",title:"Self-Portrait as Allegory of Painting",date:"ca. 1638-1639",medium:"Oil on canvas",location:"Naples/London",features:"Artist as La Pittura personification; active creation; only a woman could paint this subject",fig:"24-20"},
+{period:"baroque",artist:"Gaulli (Il Baciccia)",title:"Triumph of the Name of Jesus",date:"1676-1679",medium:"Fresco",location:"Il Gesu, Rome",features:"Illusionistic ceiling; figures spill over frame; damned fall to darkness; light/dark",fig:"24-22"},
+{period:"baroque",artist:"Fra Andrea Pozzo",title:"Glorification of Saint Ignatius",date:"1691-1694",medium:"Fresco",location:"Sant'Ignazio, Rome",features:"Ultimate trompe l'oeil ceiling; architecture extends into sky; one correct viewing spot",fig:"24-23"},
+{period:"baroque",artist:"Jusepe de Ribera",title:"Martyrdom of Saint Philip",date:"ca. 1639",medium:"Oil on canvas",location:"Naples (Spanish-born)",features:"Caravaggesque; graphic suffering; Counter-Reformation martyrdom; tenebrism",fig:"24-24"},
+{period:"baroque",artist:"Francisco de Zurbaran",title:"Saint Serapion",date:"1628",medium:"Oil on canvas",location:"Seville, Spain",features:"Mercedarian martyr; stark white robes; simple composition; powerful devotion",fig:"24-25"},
+{period:"baroque",artist:"Diego Velazquez",title:"Water Carrier of Seville",date:"ca. 1619",medium:"Oil on canvas",location:"Seville, Spain",features:"Early bodegon (genre); Caravaggesque; masterful glass/water rendering",fig:"24-26"},
+{period:"baroque",artist:"Diego Velazquez",title:"Surrender of Breda",date:"1634-1635",medium:"Oil on canvas",location:"Madrid",features:"History painting; magnanimous victor; lances (las lanzas); dignified treatment",fig:"24-27"},
+{period:"baroque",artist:"Diego Velazquez",title:"Las Meninas",date:"1656",medium:"Oil on canvas",location:"Madrid",features:"Complex space; mirror reflection king/queen; painter in painting; multiple viewing levels",fig:"24-28"},
+{period:"baroque",artist:"Bartolome Esteban Murillo",title:"Immaculate Conception",date:"ca. 1661-1670",medium:"Oil on canvas",location:"Seville, Spain",features:"Canonical Immaculate Virgin; soft light; cherubs; Counter-Reformation devotion",fig:"24-29"},
+
+// BAROQUE NORTHERN EUROPE — FLANDERS
+{period:"baroque",artist:"Pieter Claesz",title:"Vanitas Still Life",date:"1630s",medium:"Oil on panel",location:"Germanisches Nationalmuseum, Nuremberg",features:"Vanitas: skull, timepiece, tipped glass, cracked walnut = life's transience; self-portrait in glass ball",fig:"25-1"},
+{period:"baroque",artist:"Peter Paul Rubens",title:"Elevation of the Cross",date:"1610",medium:"Oil on wood (triptych)",location:"Antwerp Cathedral",features:"Muscled figures; Michelangelo + Caravaggio influence; diagonal composition; Counter-Reformation energy",fig:"25-2"},
+{period:"baroque",artist:"Peter Paul Rubens",title:"Consequences of War",date:"1638-1639",medium:"Oil on canvas",location:"Galleria Palatina, Florence",features:"Allegorical: Mars dragged by Fury; Venus restrains; broken lute = Harmony; Thirty Years' War commentary",fig:"25-3"},
+{period:"baroque",artist:"Peter Paul Rubens",title:"Arrival of Marie de' Medici at Marseilles",date:"1622-1625",medium:"Oil on canvas",location:"Louvre, Paris",features:"Marie de' Medici cycle; allegorical/historical; Neptune, Nereids, Fame; robust Baroque theatricality",fig:"25-4"},
+{period:"baroque",artist:"Anthony van Dyck",title:"Charles I at the Hunt",date:"ca. 1635",medium:"Oil on canvas",location:"Louvre, Paris",features:"Court portrait; elegant relaxed authority; king made taller than horse/attendants; landscape setting",fig:"25-5"},
+{period:"baroque",artist:"Clara Peeters",title:"Still Life with Flowers, Goblet, Dried Fruit, and Pretzels",date:"1611",medium:"Oil on panel",location:"Museo del Prado, Madrid",features:"Pioneer of still-life; breakfast piece; virtuoso surface rendering; dark background",fig:"25-6"},
+
+// BAROQUE NORTHERN EUROPE — DUTCH REPUBLIC
+{period:"baroque",artist:"Hendrick ter Brugghen",title:"Calling of Saint Matthew",date:"1621",medium:"Oil on canvas",location:"Centraal Museum, Utrecht",features:"Caravaggio influence; softer palette; intimate scale for private home; compare to Caravaggio's version",fig:"25-7"},
+{period:"baroque",artist:"Gerrit van Honthorst",title:"Supper Party",date:"1620",medium:"Oil on canvas",location:"Uffizi, Florence",features:"Genre scene; hidden candlelight source; Caravaggesque nighttime; moral undertone (gluttony/lust)",fig:"25-8"},
+{period:"baroque",artist:"Frans Hals",title:"Archers of Saint Hadrian",date:"ca. 1633",medium:"Oil on canvas",location:"Frans Halsmuseum, Haarlem",features:"Militia group portrait; spontaneous brushwork; individual action and variety; festive civic pride",fig:"25-9"},
+{period:"baroque",artist:"Frans Hals",title:"Women Regents of the Old Men's Home at Haarlem",date:"1664",medium:"Oil on canvas",location:"Frans Halsmuseum, Haarlem",features:"Late work; somber monochromatic; stern Calvinist women; puritanical restraint; charitable duty",fig:"25-10"},
+{period:"baroque",artist:"Judith Leyster",title:"Self-Portrait",date:"ca. 1630",medium:"Oil on canvas",location:"National Gallery of Art, Washington D.C.",features:"Hals follower; depicts herself painting; confident smile; elegant attire; once attributed to Hals",fig:"25-11"},
+{period:"baroque",artist:"Rembrandt van Rijn",title:"Anatomy Lesson of Dr. Nicolaes Tulp",date:"1632",medium:"Oil on canvas",location:"Mauritshuis, The Hague",features:"Innovative group portrait; corpse diagonal; triangular composition; surgeons' guild commission; age 26",fig:"25-12"},
+{period:"baroque",artist:"Rembrandt van Rijn",title:"Night Watch (Company of Captain Frans Banning Cocq)",date:"1642",medium:"Oil on canvas",location:"Rijksmuseum, Amsterdam",features:"Dramatic lighting; militia preparing to march; not actually nocturnal (darkened varnish); action-filled",fig:"25-13"},
+{period:"baroque",artist:"Rembrandt van Rijn",title:"Return of the Prodigal Son",date:"ca. 1665",medium:"Oil on canvas",location:"Hermitage, Saint Petersburg",features:"Light/shadow as emotion; father embraces lost son; spiritual intimacy; late style masterpiece",fig:"25-14"},
+{period:"baroque",artist:"Rembrandt van Rijn",title:"Self-Portrait",date:"ca. 1659-1660",medium:"Oil on canvas",location:"Kenwood House, London",features:"Painter with brushes/palette; psychology of light; dignity; circles on wall may = virtuosity",fig:"25-15"},
+{period:"baroque",artist:"Rembrandt van Rijn",title:"Christ with the Sick around Him (Hundred-Guilder Print)",date:"ca. 1649",medium:"Etching and engraving",location:"Pierpont Morgan Library, New York",features:"Supreme printmaking; combines multiple episodes from Matthew; named for high sale price",fig:"25-16"},
+{period:"baroque",artist:"Aelbert Cuyp",title:"Distant View of Dordrecht, with a Milkmaid and Four Cows",date:"late 1640s",medium:"Oil on canvas",location:"National Gallery, London",features:"Topographical Dutch landscape; dairy industry; golden light; painted in studio",fig:"25-17"},
+{period:"baroque",artist:"Jacob van Ruisdael",title:"View of Haarlem from the Dunes at Overveen",date:"ca. 1670",medium:"Oil on canvas",location:"Mauritshuis, The Hague",features:"Specific locale; windmills, Saint Bavo church; low horizon; vast sky; linen bleaching foreground",fig:"25-18"},
+{period:"baroque",artist:"Johannes Vermeer",title:"Woman Holding a Balance",date:"ca. 1664",medium:"Oil on canvas",location:"National Gallery of Art, Washington D.C.",features:"Empty scales; pearls/gold; Last Judgment behind; allegory of temperate life; window light",fig:"25-19"},
+{period:"baroque",artist:"Johannes Vermeer",title:"Allegory of the Art of Painting",date:"1670-1675",medium:"Oil on canvas",location:"Kunsthistorisches Museum, Vienna",features:"Artist painting Clio (muse of history); curtain; map; camera obscura; most complex Vermeer",fig:"25-20"},
+{period:"baroque",artist:"Jan Steen",title:"Feast of Saint Nicholas",date:"ca. 1660-1665",medium:"Oil on canvas",location:"Rijksmuseum, Amsterdam",features:"Lively domestic chaos; children discovering gifts; moralizing undertone; selfishness, jealousy",fig:"25-21"},
+{period:"baroque",artist:"Willem Kalf",title:"Still Life with a Late Ming Ginger Jar",date:"1669",medium:"Oil on canvas",location:"Indianapolis Museum of Art",features:"Pronkstilleven (luxury still life); Chinese jar, Persian carpet; Dutch trade wealth; possible vanitas",fig:"25-22"},
+{period:"baroque",artist:"Rachel Ruysch",title:"Flower Still Life",date:"after 1700",medium:"Oil on canvas",location:"Toledo Museum of Art",features:"Lush floral arrangements; flowers from different seasons; diagonal composition; court painter",fig:"25-23"},
+
+// BAROQUE NORTHERN EUROPE — FRANCE
+{period:"baroque",artist:"Hyacinthe Rigaud",title:"Louis XIV",date:"1701",medium:"Oil on canvas",location:"Louvre, Paris",features:"State portrait; red heels, ermine robes; 5'4 king made imposing; divine right; 9 ft canvas",fig:"25-24"},
+{period:"baroque",artist:"Perrault, Le Vau, Le Brun",title:"East Facade of the Louvre",date:"1667-1670",medium:"Stone",location:"Paris",features:"French + Italian classical synthesis; paired Corinthian columns; temple front; horizontal sweep",fig:"25-25"},
+{period:"baroque",artist:"Hardouin-Mansart, Le Brun, Le Notre",title:"Palace of Versailles (aerial view)",date:"begun 1669",medium:"Stone/gardens",location:"Versailles",features:"Grandiose palace + gardens; three avenues converge on king's bedroom; Sun King absolutism",fig:"25-26"},
+{period:"baroque",artist:"Hardouin-Mansart and Le Brun",title:"Galerie des Glaces (Hall of Mirrors)",date:"ca. 1680",medium:"Stone/glass/paint",location:"Versailles",features:"240 ft hall; mirrors opposite windows; illusionistic space extension; Baroque splendor",fig:"25-27"},
+{period:"baroque",artist:"Francois Girardon and Thomas Regnaudin",title:"Apollo Attended by the Nymphs of Thetis",date:"1664-1670",medium:"Marble",location:"Versailles park",features:"Apollo = Sun King; classical figures influenced by Poussin; mythological glorification",fig:"25-28"},
+{period:"baroque",artist:"Hardouin-Mansart",title:"Eglise du Dome (Church of the Invalides)",date:"1676-1706",medium:"Stone",location:"Paris",features:"Domed church; French + Italian Baroque; three-shell dome with hidden windows; hospital chapel",fig:"25-30"},
+{period:"baroque",artist:"Nicolas Poussin",title:"Et in Arcadia Ego",date:"ca. 1655",medium:"Oil on canvas",location:"Louvre, Paris",features:"Grand manner; shepherds read tomb inscription (death in paradise); statuesque classical figures",fig:"25-31"},
+{period:"baroque",artist:"Nicolas Poussin",title:"Landscape with Saint John on Patmos",date:"1640",medium:"Oil on canvas",location:"Art Institute of Chicago",features:"Classical landscape; ruins suggest civilization's decay; rational order; obelisk and temple",fig:"25-32"},
+{period:"baroque",artist:"Claude Lorrain",title:"Landscape with Cattle and Peasants",date:"1629",medium:"Oil on canvas",location:"Philadelphia Museum of Art",features:"Ideal classical landscape; golden light; atmospheric perspective; landscape as true subject",fig:"25-33"},
+{period:"baroque",artist:"Louis Le Nain",title:"Family of Country People",date:"ca. 1640",medium:"Oil on canvas",location:"Louvre, Paris",features:"Peasant dignity; stoic expression; somber palette; counter to grand manner; Thirty Years' War era",fig:"25-34"},
+{period:"baroque",artist:"Jacques Callot",title:"Hanging Tree (from Miseries of War)",date:"1629-1633",medium:"Etching",location:"Bibliotheque nationale, Paris",features:"First realistic depiction of war's horrors; mass execution; precise tiny detail; Lorraine wars",fig:"25-35"},
+{period:"baroque",artist:"Georges de La Tour",title:"Adoration of the Shepherds",date:"1645-1650",medium:"Oil on canvas",location:"Louvre, Paris",features:"Candlelit nighttime; Caravaggesque but gentler; simplified forms; no halos; spiritual stillness",fig:"25-36"},
+
+// BAROQUE NORTHERN EUROPE — ENGLAND
+{period:"baroque",artist:"Inigo Jones",title:"Banqueting House, Whitehall",date:"1619-1622",medium:"Stone",location:"London",features:"Palladian classicism; two superimposed orders (Ionic/Corinthian); horizontal roofline; Rubens ceiling",fig:"25-37"},
+{period:"baroque",artist:"Christopher Wren",title:"Saint Paul's Cathedral (west facade)",date:"1675-1710",medium:"Stone",location:"London",features:"After Great Fire; harmonizes Palladio + Borromini + St. Peter's dome; English Baroque masterpiece",fig:"25-38"},
+];
+
+let currentIndex = 0;
+let filteredCards = [...artworks];
+let quizMode = 'show-image';
+
+const periodLabels = {
+'medieval': 'Late Medieval',
+'northern': 'Northern Renaissance',
+'early-ren': 'Early Renaissance',
+'high-ren': 'High Renaissance',
+'mannerism': 'Mannerism',
+'baroque': 'Baroque'
+};
+
+const periodClass = {
+'medieval': 'medieval',
+'northern': 'northern',
+'early-ren': 'early-ren',
+'high-ren': 'high-ren',
+'mannerism': 'mannerism',
+'baroque': 'baroque'
+};
+
+function renderCard() {
+const card = document.getElementById('card');
+card.classList.remove('flipped');
+const art = filteredCards[currentIndex];
+if (!art) return;
+
+const front = document.getElementById('cardFront');
+const back = document.getElementById('cardBack');
+const tag = `<span class="period-tag ${periodClass[art.period]}">${periodLabels[art.period]}</span>`;
+
+if (quizMode === 'show-image') {
+front.innerHTML = `${tag}<h2>${art.title}</h2><p class="prompt">Who made this? When? What medium?</p><p class="hint">Fig. ${art.fig}</p><p class="click-hint">Click to reveal answer</p>`;
+} else if (quizMode === 'show-details') {
+front.innerHTML = `${tag}<p class="prompt"><strong>Artist:</strong> ${art.artist}<br><strong>Date:</strong> ${art.date}<br><strong>Medium:</strong> ${art.medium}<br><strong>Location:</strong> ${art.location}</p><p class="hint">What is the title of this work?</p><p class="click-hint">Click to reveal</p>`;
+} else {
+front.innerHTML = `<h2>${art.title}</h2><p class="prompt">by ${art.artist}, ${art.date}</p><p class="hint">What period/style is this?</p><p class="click-hint">Click to reveal</p>`;
+}
+
+back.innerHTML = `
+<span class="period-tag ${periodClass[art.period]}">${periodLabels[art.period]}</span>
+<h3>${art.artist}</h3>
+<div class="detail"><span>Title:</span> ${art.title}</div>
+<div class="detail"><span>Date:</span> ${art.date}</div>
+<div class="detail"><span>Medium:</span> ${art.medium}</div>
+<div class="detail"><span>Location:</span> ${art.location}</div>
+<div class="detail"><span>Fig:</span> ${art.fig}</div>
+<div class="iconography">${art.features}</div>
+`;
+
+document.getElementById('stats').textContent = `Card ${currentIndex + 1} of ${filteredCards.length}`;
+}
+
+function flipCard() {
+document.getElementById('card').classList.toggle('flipped');
+}
+
+function nextCard() {
+currentIndex = (currentIndex + 1) % filteredCards.length;
+renderCard();
+}
+
+function prevCard() {
+currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
+renderCard();
+}
+
+function setMode(period, btn) {
+document.querySelectorAll('.mode-selector button').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+if (period === 'all') {
+filteredCards = [...artworks];
+} else {
+filteredCards = artworks.filter(a => a.period === period);
+}
+currentIndex = 0;
+renderCard();
+}
+
+function setQuizMode(mode) {
+quizMode = mode;
+renderCard();
+}
+
+function shuffleCards() {
+for (let i = filteredCards.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+[filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+}
+currentIndex = 0;
+renderCard();
+}
+
+function toggleView() {
+const fv = document.getElementById('flashcardView');
+const tv = document.getElementById('tableView');
+const btn = document.getElementById('viewToggle');
+if (tv.style.display === 'none' || !tv.style.display) {
+tv.style.display = 'block';
+fv.style.display = 'none';
+btn.textContent = 'Switch to Flashcard View';
+renderTable();
+} else {
+tv.style.display = 'none';
+fv.style.display = 'block';
+btn.textContent = 'Switch to Table View';
+}
+}
+
+function renderTable() {
+const tbody = document.getElementById('tableBody');
+tbody.innerHTML = artworks.map(a => `<tr>
+<td><span class="period-tag ${periodClass[a.period]}">${periodLabels[a.period]}</span></td>
+<td>${a.artist}</td><td>${a.title}</td><td>${a.date}</td>
+<td>${a.medium}</td><td>${a.location}</td><td>${a.features}</td>
+</tr>`).join('');
+}
+
+let sortDir = 1;
+function sortTable(col) {
+const rows = Array.from(document.getElementById('tableBody').rows);
+sortDir *= -1;
+rows.sort((a, b) => {
+const av = a.cells[col].textContent;
+const bv = b.cells[col].textContent;
+return av.localeCompare(bv) * sortDir;
+});
+const tbody = document.getElementById('tableBody');
+rows.forEach(r => tbody.appendChild(r));
+}
+
+document.addEventListener('keydown', (e) => {
+if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextCard();
+else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevCard();
+else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+
+renderCard();
+</script>
+</body>
+</html>
