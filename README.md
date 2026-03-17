@@ -8,13 +8,13 @@ Covers **~163 artworks** from Medieval through Baroque periods (Chapters 16–25
 
 | File | Description |
 |------|-------------|
-| [**ARTH201_Study_Guide.pdf**](ARTH201_Study_Guide.pdf) | Clean, printable PDF version of the full study guide — black-and-white, easy to read |
+| [**study-guide.pdf**](study-guide.pdf) | Clean, printable PDF version of the full study guide — black-and-white, easy to read |
 | [**flashcards.html**](flashcards.html) | Interactive flashcards with flip animations, period filters, shuffle, quiz mode, and table view |
 | [**study_guide.html**](study_guide.html) | Interactive study guide with search, collapsible sections, color-coded periods, and dark theme |
 
 ## How to Use
 
-- **PDF** — Click [ARTH201_Study_Guide.pdf](ARTH201_Study_Guide.pdf) and download. Print it or read on any device.
+- **PDF** — Click [study-guide.pdf](study-guide.pdf) and download. Print it or read on any device.
 - **HTML files** — Open the links below directly in your browser (no download needed):
   - [Flashcards](https://aryanassaj.github.io/arth201-study-guide/flashcards.html)
   - [Study Guide](https://aryanassaj.github.io/arth201-study-guide/study_guide.html)
