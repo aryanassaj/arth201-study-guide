@@ -1,0 +1,42 @@
+import urllib.request, urllib.parse, json, time, sys
+
+with open("image_map.json") as f:
+    data = json.load(f)
+
+# All fig->query pairs from fetch_images2.py
+all_pairs = [
+    ("14-1", "Bonaventura Berlinghieri Saint Francis"),("14-2", "Cimabue Santa Trinita Maestà"),("14-3", "Giotto Ognissanti Madonna"),("14-4", "Giotto Lamentation Scrovegni Chapel"),("14-5", "Giotto Entry Jerusalem Scrovegni"),("14-6", "Giotto Kiss Judas Scrovegni"),("14-8", "Duccio di Buoninsegna Maestà"),("14-9", "Duccio Betrayal Christ Maestà"),("14-10", "Simone Martini Annunciation"),("14-11", "Pietro Lorenzetti Birth Virgin"),("14-12", "Ambrogio Lorenzetti Allegory Good Government"),("20-1", "Well of Moses Sluter"),("20-2", "Très Riches Heures du Duc de Berry"),("20-3", "Mérode Altarpiece"),("20-4", "Ghent Altarpiece"),("20-6", "Arnolfini Portrait"),("20-7", "Portrait of a Man in a Red Turban"),("20-8", "Descent from the Cross Rogier van der Weyden"),("20-9", "Saint Luke Drawing Virgin Rogier"),("20-11", "Dirk Bouts Last Supper altarpiece"),("20-12", "Portinari Altarpiece"),("20-13", "Hans Memling Saint John Altarpiece"),("20-15", "Melun Diptych"),("20-16", "Konrad Witz Miraculous Draught Fishes"),("20-17", "Veit Stoss altarpiece Kraków"),("20-19", "Schongauer Saint Anthony"),("21-2", "Sacrifice of Isaac Brunelleschi"),("21-3", "Sacrifice of Isaac Ghiberti"),("21-5", "Donatello Saint Mark Orsanmichele"),("21-6", "Donatello Saint George"),("21-8", "Donatello Feast Herod"),("21-10", "Gates of Paradise Ghiberti"),("21-11", "David Donatello bronze"),("21-12", "David Verrocchio"),("21-13", "Hercules and Antaeus Pollaiuolo"),("21-15", "Equestrian statue Gattamelata"),("21-16", "Bartolomeo Colleoni Verrocchio"),("21-17", "Adoration Magi Gentile Fabriano"),("21-18", "Tribute Money Masaccio"),("21-19", "Expulsion from Garden Eden Masaccio"),("21-20", "Holy Trinity Masaccio"),("21-21", "Annunciation Fra Angelico San Marco"),("21-22", "Last Supper Andrea del Castagno"),("21-23", "Battle of San Romano Uccello"),("21-24", "Madonna Child Angels Fra Filippo Lippi"),("21-25", "Resurrection Piero della Francesca"),("21-26", "Birth Virgin Ghirlandaio"),("21-28", "Primavera Botticelli"),("21-1", "Birth of Venus Botticelli"),("21-41", "Delivery of the Keys Perugino"),("21-42", "Damned Cast Hell Signorelli"),("21-43", "Flagellation of Christ Piero della Francesca"),("21-44", "Battista Sforza Federico Montefeltro"),("21-30", "Ospedale degli Innocenti"),("21-31", "San Lorenzo Florence Brunelleschi interior"),("21-45", "Sant'Andrea Mantua Alberti"),("21-48", "Camera degli Sposi Mantegna"),("21-50", "Lamentation over Dead Christ Mantegna"),("21-40", "Saint Francis Ecstasy Giovanni Bellini"),("22-2", "Virgin of the Rocks Leonardo"),("22-4", "Last Supper Leonardo da Vinci"),("22-5", "Mona Lisa"),("22-7", "Marriage of the Virgin Raphael"),("22-8", "Madonna of the Meadow Raphael"),("22-9", "School of Athens"),("22-11", "Triumph of Galatea Raphael"),("22-12", "Pietà Michelangelo"),("22-13", "David Michelangelo"),("22-14", "Moses Michelangelo"),("22-16", "Tomb Giuliano Medici Michelangelo"),("22-17/18", "Sistine Chapel ceiling"),("22-19", "Last Judgment Michelangelo"),("22-21", "Tempietto Bramante"),("22-25", "St Peter Basilica dome"),("22-28", "Laurentian Library vestibule"),("22-29", "San Zaccaria Altarpiece Bellini"),("22-31", "The Tempest Giorgione"),("22-33", "Assumption Virgin Titian"),("22-34", "Pesaro Madonna Titian"),("22-36", "Venus of Urbino"),("22-53", "Assumption of the Virgin Correggio Parma"),("22-38", "Deposition Pontormo"),("22-39", "Madonna with Long Neck"),("22-40", "Self-portrait Convex Mirror Parmigianino"),("22-41", "Allegory Venus Cupid Folly Time Bronzino"),("22-43", "Eleonora of Toledo Bronzino"),("22-44", "Sofonisba Anguissola chess painting"),("22-50", "Last Supper Tintoretto"),("22-51", "Feast in the House of Levi Veronese"),("22-45", "Cellini Salt Cellar"),("22-46", "Rape Sabine Women Giambologna"),("22-47/49", "Palazzo del Tè Giulio Romano"),("22-54", "Villa Rotonda Palladio"),("22-56", "San Giorgio Maggiore"),("22-58", "Church Gesù Rome"),("23-22", "Burial of the Count of Orgaz"),("23-24", "View of Toledo El Greco"),("23-3", "Self-Portrait Dürer 1500"),("23-4", "Adam and Eve Dürer engraving"),("23-5", "Melencolia I"),("23-6", "Four Apostles Dürer"),("23-2", "Isenheim Altarpiece"),("23-12", "The Ambassadors Holbein"),("23-13", "Portrait Henry VIII Holbein"),("23-20", "Hunters in the Snow Bruegel"),("24-2", "Santa Susanna Rome facade"),("24-3", "St Peter's Basilica facade"),("24-4", "Saint Peter's Square Bernini colonnade"),("24-5", "Baldachin Saint Peter's Bernini"),("24-6", "David Bernini marble"),("24-1", "Ecstasy of Saint Teresa"),("24-7", "Fountain Four Rivers Bernini"),("24-8", "San Carlo alle Quattro Fontane"),("24-11", "Sant'Ivo alla Sapienza Borromini"),("24-14", "Chapel Holy Shroud Guarini"),("24-15", "Flight into Egypt Annibale Carracci"),("24-16", "Loves of Gods Carracci Farnese"),("24-17", "Calling of Saint Matthew Caravaggio"),("24-18", "Conversion of Saint Paul Caravaggio"),("24-19", "Judith Slaying Holofernes Artemisia Gentileschi"),("24-20", "Self-Portrait Allegory Painting Artemisia"),("24-22", "Triumph Name Jesus Baciccia"),("24-23", "Andrea Pozzo Sant'Ignazio ceiling"),("24-24", "Martyrdom Saint Philip Ribera"),("24-25", "Saint Serapion Zurbarán"),("24-26", "Water Seller Seville Velázquez"),("24-27", "Surrender Breda Velázquez"),("24-28", "Las Meninas"),("24-29", "Immaculate Conception Murillo"),("25-1", "Vanitas Still Life Pieter Claesz"),("25-2", "Elevation Cross Rubens"),("25-3", "Consequences War Rubens"),("25-4", "Marie de Medici Rubens Marseilles"),("25-5", "Charles I at the Hunt Van Dyck"),("25-6", "Clara Peeters still life"),("25-7", "Calling Saint Matthew Ter Brugghen"),("25-8", "Supper Party Honthorst"),("25-9", "Banquet Officers St George Hals"),("25-10", "Regentesses Old Men's Almshouse Hals"),("25-11", "Self-Portrait Judith Leyster"),("25-12", "Anatomy Lesson Dr Tulp"),("25-13", "Night Watch Rembrandt"),("25-14", "Return Prodigal Son Rembrandt"),("25-15", "Self-portrait Rembrandt Kenwood"),("25-16", "Hundred Guilder Print"),("25-17", "Aelbert Cuyp Dordrecht"),("25-18", "View Haarlem Ruisdael"),("25-19", "Woman Holding Balance Vermeer"),("25-20", "Art of Painting Vermeer"),("25-21", "Feast Saint Nicholas Jan Steen"),("25-22", "Willem Kalf still life"),("25-23", "Rachel Ruysch flowers"),("25-24", "Louis XIV Rigaud"),("25-25", "East facade Louvre colonnade"),("25-26", "Palace of Versailles"),("25-27", "Hall of Mirrors Versailles"),("25-28", "Apollo Nymphs Thetis Girardon"),("25-29", "Royal Chapel Versailles"),("25-30", "Les Invalides dome Paris"),("25-31", "Et in Arcadia ego Poussin"),("25-32", "Landscape Saint John Patmos Poussin"),("25-33", "Claude Lorrain landscape"),("25-34", "Peasant Family Le Nain"),("25-35", "Miseries War Callot Hanging Tree"),("25-36", "Adoration Shepherds Georges de La Tour"),("25-37", "Banqueting House Whitehall"),("25-38", "St Paul's Cathedral London"),
+]
+
+query_map = {fig: q for fig, q in all_pairs}
+missing = {k: v for k, v in data.items() if not v}
+print(f"Retrying {len(missing)} missing...", file=sys.stderr)
+
+for i, (fig, _) in enumerate([(k, v) for k, v in missing.items()]):
+    query = query_map.get(fig, fig)
+    try:
+        encoded = urllib.parse.quote(query)
+        url = f"https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch={encoded}&gsrlimit=1&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json"
+        req = urllib.request.Request(url, headers={"User-Agent": "ARTH201StudyGuide/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            d = json.loads(resp.read())
+            pages = d.get("query", {}).get("pages", {})
+            found = False
+            for page in pages.values():
+                thumb = page.get("thumbnail", {}).get("source", "")
+                if thumb:
+                    data[fig] = thumb
+                    print(f"[{i+1}/{len(missing)}] OK: {fig}", file=sys.stderr)
+                    found = True
+                    break
+            if not found:
+                print(f"[{i+1}/{len(missing)}] STILL MISS: {fig}", file=sys.stderr)
+    except Exception as e:
+        print(f"[{i+1}/{len(missing)}] ERR: {fig} - {e}", file=sys.stderr)
+    time.sleep(2.0)
+
+with open("image_map.json", "w") as f:
+    json.dump(data, f, indent=2)
+
+found = sum(1 for v in data.values() if v)
+print(f"\nFinal: {found}/{len(data)}", file=sys.stderr)

@@ -15,13 +15,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; colo
 .controls button:hover, .controls select:hover { background: #e94560; }
 .controls button.active { background: #e94560; }
 .stats { text-align: center; padding: 10px; color: #aaa; font-size: 0.9em; }
-.card-container { display: flex; justify-content: center; align-items: center; padding: 20px; min-height: 500px; }
-.card { width: 90%; max-width: 700px; min-height: 400px; perspective: 1000px; cursor: pointer; }
+.card-container { display: flex; justify-content: center; align-items: flex-start; padding: 20px; min-height: 500px; }
+.card { width: 90%; max-width: 700px; perspective: 1000px; cursor: pointer; }
 .card-inner { position: relative; width: 100%; min-height: 400px; transition: transform 0.6s; transform-style: preserve-3d; }
 .card.flipped .card-inner { transform: rotateY(180deg); }
-.card-front, .card-back { position: absolute; width: 100%; min-height: 400px; backface-visibility: hidden; border-radius: 12px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.card-front, .card-back { width: 100%; min-height: 400px; backface-visibility: hidden; border-radius: 12px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow-y: auto; }
 .card-front { background: linear-gradient(135deg, #0f3460, #16213e); border: 2px solid #e94560; }
-.card-back { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #53d769; transform: rotateY(180deg); }
+.card-back { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #53d769; transform: rotateY(180deg); position: absolute; top: 0; left: 0; }
 .card-front h2 { color: #e94560; font-size: 1.5em; margin-bottom: 15px; text-align: center; }
 .card-front .prompt { font-size: 1.1em; color: #ccc; text-align: center; }
 .card-front .hint { font-size: 0.85em; color: #666; margin-top: 15px; }
@@ -29,6 +29,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; colo
 .card-back .detail { margin: 5px 0; font-size: 1em; }
 .card-back .detail span { color: #e94560; font-weight: bold; }
 .card-back .iconography { margin-top: 10px; padding: 10px; background: rgba(83, 215, 105, 0.1); border-radius: 8px; font-size: 0.9em; color: #aaa; }
+.card-img { max-width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px; margin: 10px 0; }
+.card-img-container { text-align: center; }
 .nav-buttons { display: flex; justify-content: center; gap: 20px; padding: 20px; }
 .nav-buttons button { padding: 12px 30px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; font-weight: bold; }
 .btn-prev { background: #0f3460; color: #eee; }
@@ -80,8 +82,9 @@ table tr:hover { background: rgba(233, 69, 96, 0.05); }
 <div class="controls">
 <button onclick="shuffleCards()" title="Randomize order">Shuffle</button>
 <select id="quizMode" onchange="setQuizMode(this.value)">
-<option value="show-image">Mode: See Title, Guess Details</option>
+<option value="show-title">Mode: See Title, Guess Details</option>
 <option value="show-details">Mode: See Details, Name the Work</option>
+<option value="show-image-only">Mode: See Image, Guess Everything</option>
 <option value="identify-period">Mode: Identify the Period/Style</option>
 </select>
 </div>
@@ -310,9 +313,179 @@ const artworks = [
 {period:"baroque",artist:"Christopher Wren",title:"Saint Paul's Cathedral (west facade)",date:"1675-1710",medium:"Stone",location:"London",features:"After Great Fire; harmonizes Palladio + Borromini + St. Peter's dome; English Baroque masterpiece",fig:"25-38"},
 ];
 
+const imageMap = {
+  '14-1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bonaventura_Berlinghieri_Francesco.jpg/960px-Bonaventura_Berlinghieri_Francesco.jpg',
+  '14-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Cimabue_Trinita_Madonna.jpg/960px-Cimabue_Trinita_Madonna.jpg',
+  '14-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Giotto%2C_1267_Around-1337_-_Maest%C3%A0_-_Google_Art_Project.jpg/960px-Giotto%2C_1267_Around-1337_-_Maest%C3%A0_-_Google_Art_Project.jpg',
+  '14-4': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg/960px-Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg',
+  '14-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg/960px-Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg',
+  '14-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg/960px-Padova_Cappella_degli_Scrovegni_Innen_Langhaus_West_5.jpg',
+  '14-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Duccio_maesta1021.jpg/960px-Duccio_maesta1021.jpg',
+  '14-9': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/GaudenzioFerrari_StorieCristo_Varallo2.jpg/960px-GaudenzioFerrari_StorieCristo_Varallo2.jpg',
+  '14-10': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Simone_Martini_-_Frontispice_du_Virgile.jpg/960px-Simone_Martini_-_Frontispice_du_Virgile.jpg',
+  '14-11': 'https://upload.wikimedia.org/wikipedia/commons/3/34/Pietro_lorenzetti%2C_compianto_%28dettaglio%29_basilica_inferiore_di_assisi_%281310-1329%29.jpg',
+  '14-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Ambrogio_Lorenzetti_-_Allegory_of_the_Good_Government_%28detail%29_-_WGA13487.jpg/960px-Ambrogio_Lorenzetti_-_Allegory_of_the_Good_Government_%28detail%29_-_WGA13487.jpg',
+  '20-1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Dijon_-_Puits_de_Mo%C3%AFse_-_01.jpg/960px-Dijon_-_Puits_de_Mo%C3%AFse_-_01.jpg',
+  '20-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Anatomical_Man.jpg/960px-Anatomical_Man.jpg',
+  '20-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Robert_Campin_006.jpg/960px-Robert_Campin_006.jpg',
+  '20-4': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Lamgods_open.jpg/960px-Lamgods_open.jpg',
+  '20-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/The_Arnolfini_portrait_%281434%29.jpg/960px-The_Arnolfini_portrait_%281434%29.jpg',
+  '20-7': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/%D7%99%D7%90%D7%9F_%D7%95%D7%90%D7%9F_%D7%90%D7%99%D7%99%D7%A7.jpg/960px-%D7%99%D7%90%D7%9F_%D7%95%D7%90%D7%9F_%D7%90%D7%99%D7%99%D7%A7.jpg',
+  '20-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/El_Descendimiento%2C_by_Rogier_van_der_Weyden%2C_from_Prado_in_Google_Earth.jpg/960px-El_Descendimiento%2C_by_Rogier_van_der_Weyden%2C_from_Prado_in_Google_Earth.jpg',
+  '20-9': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Saint_Luke_Drawing_the_Virgin_MFA_Boston.jpg/960px-Saint_Luke_Drawing_the_Virgin_MFA_Boston.jpg',
+  '20-11': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Dieric_Bouts_-_Altaarstuk_van_het_Heilig_Sacrament.jpg/960px-Dieric_Bouts_-_Altaarstuk_van_het_Heilig_Sacrament.jpg',
+  '20-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Hugo_van_der_Goes_-_Portinari_Triptych_%28c._1477%29.jpg/960px-Hugo_van_der_Goes_-_Portinari_Triptych_%28c._1477%29.jpg',
+  '20-13': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Hans_Memling_Triptych_of_John_the_Baptist_and_John_the_Evangelist.png/960px-Hans_Memling_Triptych_of_John_the_Baptist_and_John_the_Evangelist.png',
+  '20-15': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Diptyque_de_Melun_reconstitu%C3%A9.jpg/960px-Diptyque_de_Melun_reconstitu%C3%A9.jpg',
+  '20-16': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Raphael_-_The_Miraculous_Draft_of_Fishes_-_Google_Art_Project.jpg/960px-Raphael_-_The_Miraculous_Draft_of_Fishes_-_Google_Art_Project.jpg',
+  '20-17': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Church_of_Our_Lady_Assumed_into_Heaven%2C_St._Mary%27s_%28Main%29_Altar_%281489_by_Veit_Stoss%29%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg/960px-Church_of_Our_Lady_Assumed_into_Heaven%2C_St._Mary%27s_%28Main%29_Altar_%281489_by_Veit_Stoss%29%2C_5_Mariacki_square%2C_Old_Town%2C_Krak%C3%B3w%2C_Poland.jpg',
+  '20-19': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Schongauer_Anthony.jpg/960px-Schongauer_Anthony.jpg',
+  '21-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Masaccio%2C_cappella_brancacci%2C_san_pietro_in_cattedra._ritratto_di_filippo_brunelleschi-184.jpg/960px-Masaccio%2C_cappella_brancacci%2C_san_pietro_in_cattedra._ritratto_di_filippo_brunelleschi-184.jpg',
+  '21-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Ghiberti.png/960px-Ghiberti.png',
+  '21-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/La_chiesa_di_Orsanmichele%2C_detta_anticamente_anche_chiesa_di_San_Michele_in_Orto.jpg/960px-La_chiesa_di_Orsanmichele%2C_detta_anticamente_anche_chiesa_di_San_Michele_in_Orto.jpg',
+  '21-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/St._Georg%2C_Donatello%2C_1416-17%2C_Bargello_Florenz-01.jpg/960px-St._Georg%2C_Donatello%2C_1416-17%2C_Bargello_Florenz-01.jpg',
+  '21-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Baptismal_font_of_the_Siena_Baptistry_la-test_battista_presenta.jpg/960px-Baptismal_font_of_the_Siena_Baptistry_la-test_battista_presenta.jpg',
+  '21-10': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Ghiberti.png/960px-Ghiberti.png',
+  '21-11': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Donatello%2C_David%2C_bronze%2C_1435-40%2C_Florence%2C_Bargello%2C_detail.jpg/960px-Donatello%2C_David%2C_bronze%2C_1435-40%2C_Florence%2C_Bargello%2C_detail.jpg',
+  '21-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/David%2C_Andrea_del_Verrocchio%2C_ca._1466-69%2C_Bargello_Florenz-01.jpg/960px-David%2C_Andrea_del_Verrocchio%2C_ca._1466-69%2C_Bargello_Florenz-01.jpg',
+  '21-13': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Antonio_del_Pollaiolo%2C_Ercole_e_l%27Idra%2C_1470-75_ca._%28Uffizi%29_02-edit.jpg/960px-Antonio_del_Pollaiolo%2C_Ercole_e_l%27Idra%2C_1470-75_ca._%28Uffizi%29_02-edit.jpg',
+  '21-15': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Statue_of_Gattamelata_by_Donatello_-_Padua_2016_%282%29.jpg/960px-Statue_of_Gattamelata_by_Donatello_-_Padua_2016_%282%29.jpg',
+  '21-16': 'https://upload.wikimedia.org/wikipedia/commons/8/83/BartholomaeusColleoni1566-69.png',
+  '21-17': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Gentile_da_Fabriano_-_Adorazione_dei_Magi_-_Google_Art_ProjectFXD.jpg/960px-Gentile_da_Fabriano_-_Adorazione_dei_Magi_-_Google_Art_ProjectFXD.jpg',
+  '21-18': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/The_Tribute_Money_by_Masaccio.jpg/960px-The_Tribute_Money_by_Masaccio.jpg',
+  '21-19': 'https://upload.wikimedia.org/wikipedia/commons/3/37/Masaccio-TheExpulsionOfAdamAndEveFromEden-Restoration.jpg',
+  '21-20': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Masaccio%2C_trinit%C3%A0.jpg/960px-Masaccio%2C_trinit%C3%A0.jpg',
+  '21-21': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Fra_Angelico_-_Annunciation.jpg/960px-Fra_Angelico_-_Annunciation.jpg',
+  '21-22': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Cenacolo_di_sant%27apollonia%2C_interno_01.JPG/960px-Cenacolo_di_sant%27apollonia%2C_interno_01.JPG',
+  '21-23': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/San_Romano_Battle_%28Paolo_Uccello%2C_London%29_01.jpg/960px-San_Romano_Battle_%28Paolo_Uccello%2C_London%29_01.jpg',
+  '21-24': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Madonna_and_Child_with_two_Angels_%28by_Filippo_Lippi%29_%E2%80%93_Galleria_degli_Uffizi%2C_Florence.jpg/960px-Madonna_and_Child_with_two_Angels_%28by_Filippo_Lippi%29_%E2%80%93_Galleria_degli_Uffizi%2C_Florence.jpg',
+  '21-25': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Resurrection.JPG',
+  '21-26': 'https://upload.wikimedia.org/wikipedia/commons/d/de/Domenico_Ghirlandaio_Self_Portrait.jpg',
+  '21-28': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Botticelli-primavera.jpg/960px-Botticelli-primavera.jpg',
+  '21-1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/960px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg',
+  '21-41': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Entrega_de_las_llaves_a_San_Pedro_%28Perugino%29.jpg/960px-Entrega_de_las_llaves_a_San_Pedro_%28Perugino%29.jpg',
+  '21-42': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Signorelli%2C_Luca_-_selfportrait_alone.jpg/960px-Signorelli%2C_Luca_-_selfportrait_alone.jpg',
+  '21-43': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Piero_della_Francesca_-_Flagelaci%C3%B3n_de_Cristo%2C_1468-1470_%28Galleria_Nazionale_delle_Marche%2C_Urbino%29.png/960px-Piero_della_Francesca_-_Flagelaci%C3%B3n_de_Cristo%2C_1468-1470_%28Galleria_Nazionale_delle_Marche%2C_Urbino%29.png',
+  '21-44': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Battista_sforza.jpg/960px-Battista_sforza.jpg',
+  '21-30': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Florence%2C_Piazza_SS_Annunziata_with_Ospedale_degli_Innocenti_%281419-39%29_and_part_of_SS_Annunziata_%281601%29.jpg/960px-Florence%2C_Piazza_SS_Annunziata_with_Ospedale_degli_Innocenti_%281419-39%29_and_part_of_SS_Annunziata_%281601%29.jpg',
+  '21-31': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Firenze_Basilica_di_San_Lorenzo_Esterno_Lato_Nord_1.jpg/960px-Firenze_Basilica_di_San_Lorenzo_Esterno_Lato_Nord_1.jpg',
+  '21-45': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/MantovaBasilicaSantAndrea_cutnpaste_over_intrusions.jpg/960px-MantovaBasilicaSantAndrea_cutnpaste_over_intrusions.jpg',
+  '21-48': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Mantegna_-_Camera_degli_Sposi.jpg/960px-Mantegna_-_Camera_degli_Sposi.jpg',
+  '21-50': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_dead_Christ_and_three_mourners%2C_by_Andrea_Mantegna.jpg/960px-The_dead_Christ_and_three_mourners%2C_by_Andrea_Mantegna.jpg',
+  '21-40': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Giovanni_Bellini_-_Saint_Francis_in_the_Desert_-_Google_Art_Project.jpg/960px-Giovanni_Bellini_-_Saint_Francis_in_the_Desert_-_Google_Art_Project.jpg',
+  '22-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Leonardo_Da_Vinci_-_Vergine_delle_Rocce_%28Louvre%29.jpg/960px-Leonardo_Da_Vinci_-_Vergine_delle_Rocce_%28Louvre%29.jpg',
+  '22-4': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg/960px-The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg',
+  '22-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/960px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',
+  '22-7': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Raffaello_-_Spozalizio_-_Web_Gallery_of_Art.jpg/960px-Raffaello_-_Spozalizio_-_Web_Gallery_of_Art.jpg',
+  '22-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Raphael_-_Madonna_in_the_Meadow_-_Google_Art_Project.jpg/960px-Raphael_-_Madonna_in_the_Meadow_-_Google_Art_Project.jpg',
+  '22-9': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg/960px-%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg',
+  '22-11': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Galatea_Raphael.jpg/960px-Galatea_Raphael.jpg',
+  '22-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Pieta_de_Michelangelo_-_Vaticano.jpg/960px-Pieta_de_Michelangelo_-_Vaticano.jpg',
+  '22-13': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%27David%27_by_Michelangelo_Fir_JBU004.jpg/960px-%27David%27_by_Michelangelo_Fir_JBU004.jpg',
+  '22-14': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Michelangelo%27s_Moses_%28Rome%29.jpg/960px-Michelangelo%27s_Moses_%28Rome%29.jpg',
+  '22-16': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Botticelli%2C_ritratto_di_giuliano_de%27_medici_bergamo.jpg/960px-Botticelli%2C_ritratto_di_giuliano_de%27_medici_bergamo.jpg',
+  '22-17/18': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Sistine_Chapel_ceiling_02_%28brightened%29.jpg/960px-Sistine_Chapel_ceiling_02_%28brightened%29.jpg',
+  '22-19': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Last_Judgement_%28Michelangelo%29.jpg/960px-Last_Judgement_%28Michelangelo%29.jpg',
+  '22-21': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Tempietto_di_San_Pietro_in_Montorio.jpg/960px-Tempietto_di_San_Pietro_in_Montorio.jpg',
+  '22-25': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg/960px-Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg',
+  '22-28': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Medicibib.jpg/960px-Medicibib.jpg',
+  '22-29': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Pala_di_San_Zaccaria_%28Venezia%29.jpg/960px-Pala_di_San_Zaccaria_%28Venezia%29.jpg',
+  '22-31': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Giorgione_-_Das_Gewitter.jpg/960px-Giorgione_-_Das_Gewitter.jpg',
+  '22-33': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Tizian_041.jpg/960px-Tizian_041.jpg',
+  '22-34': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Frari_%28Venice%29_nave_left_-_Altar_of_Madona_di_Ca%27Pesaro.jpg/960px-Frari_%28Venice%29_nave_left_-_Altar_of_Madona_di_Ca%27Pesaro.jpg',
+  '22-36': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tiziano_-_Venere_di_Urbino_-_Google_Art_Project.jpg/960px-Tiziano_-_Venere_di_Urbino_-_Google_Art_Project.jpg',
+  '22-53': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Cathedral_%28Parma%29_-_Assumption_by_Correggio.jpg/960px-Cathedral_%28Parma%29_-_Assumption_by_Correggio.jpg',
+  '22-38': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Jacopo_Pontormo_-_Kreuzabnahme_Christi.jpg/960px-Jacopo_Pontormo_-_Kreuzabnahme_Christi.jpg',
+  '22-39': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Parmigianino_-_Madonna_and_Child_with_Angels%2C_known_as_the_Madonna_with_the_Long_Neck.jpg/960px-Parmigianino_-_Madonna_and_Child_with_Angels%2C_known_as_the_Madonna_with_the_Long_Neck.jpg',
+  '22-40': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Parmigianino_Selfportrait.jpg/960px-Parmigianino_Selfportrait.jpg',
+  '22-41': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Angelo_Bronzino_-_Venus%2C_Cupid%2C_Folly_and_Time_-_National_Gallery%2C_London.jpg/960px-Angelo_Bronzino_-_Venus%2C_Cupid%2C_Folly_and_Time_-_National_Gallery%2C_London.jpg',
+  '22-43': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Alessandro_Allori%2C_santissima_trinit%C3%A0%2C_1567-1571_circa%2C_ritratto_dei_maestri%2C_bronzino_%28cropped%29.jpg/960px-Alessandro_Allori%2C_santissima_trinit%C3%A0%2C_1567-1571_circa%2C_ritratto_dei_maestri%2C_bronzino_%28cropped%29.jpg',
+  '22-44': 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Portrait_of_Elena_Anguissola_-_Sonofisba_Anguissola_%28Southampton_City_Art_Gallery%29.jpg',
+  '22-50': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Jacopo_Tintoretto_-_The_Last_Supper_-_WGA22649.jpg/960px-Jacopo_Tintoretto_-_The_Last_Supper_-_WGA22649.jpg',
+  '22-51': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Feast_in_the_House_of_Levi_by_Paolo_Veronese_%28edited_2%29.jpg/960px-The_Feast_in_the_House_of_Levi_by_Paolo_Veronese_%28edited_2%29.jpg',
+  '22-45': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Salt_Cellar.jpg/960px-Salt_Cellar.jpg',
+  '22-46': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/L._Titurius_L.f._Sabinus._denarius%2C_89_BC%2C_RRC_344-1a_%28cropped_reverse%29.jpg',
+  '22-47/49': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Mantova_104.jpg/960px-Mantova_104.jpg',
+  '22-54': 'https://upload.wikimedia.org/wikipedia/commons/d/d8/Larotonda2009.JPG',
+  '22-56': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/San_Giorgio_Maggiore_from_the_top_of_St_Mark%27s_Campanile.jpg/960px-San_Giorgio_Maggiore_from_the_top_of_St_Mark%27s_Campanile.jpg',
+  '22-58': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Jesus_Church.jpg/960px-Jesus_Church.jpg',
+  '23-22': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/El_Greco_-_The_Burial_of_the_Count_of_Orgaz.JPG/960px-El_Greco_-_The_Burial_of_the_Count_of_Orgaz.JPG',
+  '23-24': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/El_Greco_View_of_Toledo.jpg/960px-El_Greco_View_of_Toledo.jpg',
+  '23-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/D%C3%BCrer_Alte_Pinakothek.jpg/960px-D%C3%BCrer_Alte_Pinakothek.jpg',
+  '23-4': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Albrecht_D%C3%BCrer%2C_Adam_and_Eve%2C_1504%2C_Engraving.jpg/960px-Albrecht_D%C3%BCrer%2C_Adam_and_Eve%2C_1504%2C_Engraving.jpg',
+  '23-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Albrecht_D%C3%BCrer_-_Melencolia_I_-_Google_Art_Project_%28_AGDdr3EHmNGyA%29.jpg/960px-Albrecht_D%C3%BCrer_-_Melencolia_I_-_Google_Art_Project_%28_AGDdr3EHmNGyA%29.jpg',
+  '23-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Albrecht_D%C3%BCrer_-_The_Four_Apostles_-_Google_Art_Project.jpg/440px-Albrecht_D%C3%BCrer_-_The_Four_Apostles_-_Google_Art_Project.jpg',
+  '23-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Chapel_of_Unterlinden_Museum_with_Isenheim_altarpiece.jpg/960px-Chapel_of_Unterlinden_Museum_with_Isenheim_altarpiece.jpg',
+  '23-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg/960px-Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg',
+  '23-13': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Enrique_VIII_de_Inglaterra%2C_por_Hans_Holbein_el_Joven.jpg/960px-Enrique_VIII_de_Inglaterra%2C_por_Hans_Holbein_el_Joven.jpg',
+  '23-20': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg/960px-Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg',
+  '24-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Santa_Susanna_%28Rome%29_-_Front.jpg/960px-Santa_Susanna_%28Rome%29_-_Front.jpg',
+  '24-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Old_St_Peter%27s_Basilica%2C_Rome%2C_about_the_year_1450_restored_from_ancient_authorities.jpg/960px-Old_St_Peter%27s_Basilica%2C_Rome%2C_about_the_year_1450_restored_from_ancient_authorities.jpg',
+  '24-4': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg/960px-St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg',
+  '24-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Baldaquin_Bernin_Saint-Pierre_Vatican.jpg/960px-Baldaquin_Bernin_Saint-Pierre_Vatican.jpg',
+  '24-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Bernini%27s_David_02.jpg/960px-Bernini%27s_David_02.jpg',
+  '24-1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ecstasy_of_St._Teresa_HDR.jpg/960px-Ecstasy_of_St._Teresa_HDR.jpg',
+  '24-7': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Obelisco_Fontana_dei_Fiumi_Piazza_Navona_Roma.jpg/960px-Obelisco_Fontana_dei_Fiumi_Piazza_Navona_Roma.jpg',
+  '24-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/San_Carlo_alle_Quattro_Fontane_-_Front.jpg/960px-San_Carlo_alle_Quattro_Fontane_-_Front.jpg',
+  '24-11': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sant%27Ivo_alla_Sapienza_-Rome.jpg/960px-Sant%27Ivo_alla_Sapienza_-Rome.jpg',
+  '24-14': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Chapel_of_Holy_Shroud_Cupola.jpg/960px-Chapel_of_Holy_Shroud_Cupola.jpg',
+  '24-15': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Annibale_Carracci_003.jpg/960px-Annibale_Carracci_003.jpg',
+  '24-16': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/84/Farnese_Gallery_-_Annibale_Carracci_-_1597_-_Farnese_Gallery%2C_Rome.jpg/960px-Farnese_Gallery_-_Annibale_Carracci_-_1597_-_Farnese_Gallery%2C_Rome.jpg',
+  '24-17': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg/960px-Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg',
+  '24-18': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/The_Conversion_of_Saint_Paul-Caravaggio_%28c._1600-1%29.jpg/960px-The_Conversion_of_Saint_Paul-Caravaggio_%28c._1600-1%29.jpg',
+  '24-19': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Artemisia_Gentileschi_-_Judith_Beheading_Holofernes_-_WGA8563.jpg/960px-Artemisia_Gentileschi_-_Judith_Beheading_Holofernes_-_WGA8563.jpg',
+  '24-20': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Self-portrait_as_the_Allegory_of_Painting_%28La_Pittura%29_-_Artemisia_Gentileschi.jpg/960px-Self-portrait_as_the_Allegory_of_Painting_%28La_Pittura%29_-_Artemisia_Gentileschi.jpg',
+  '24-22': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Jesus_Church.jpg/960px-Jesus_Church.jpg',
+  '24-23': 'https://upload.wikimedia.org/wikipedia/commons/4/47/Andrea_Pozzo%2C_autoportrait.jpg',
+  '24-24': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Jos%C3%A9_de_Ribera_054.jpg/960px-Jos%C3%A9_de_Ribera_054.jpg',
+  '24-25': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/San_Serapio%2C_por_Francisco_de_Zurbar%C3%A1n.jpg/960px-San_Serapio%2C_por_Francisco_de_Zurbar%C3%A1n.jpg',
+  '24-26': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/El_aguador_de_Sevilla%2C_por_Diego_Vel%C3%A1zquez.jpg/960px-El_aguador_de_Sevilla%2C_por_Diego_Vel%C3%A1zquez.jpg',
+  '24-27': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Velazquez-The_Surrender_of_Breda.jpg/960px-Velazquez-The_Surrender_of_Breda.jpg',
+  '24-28': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/960px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg',
+  '24-29': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Murillo_immaculate_conception.jpg/960px-Murillo_immaculate_conception.jpg',
+  '25-1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/N%C3%BCrnberg_%E2%80%94_GNM_2013-09-07_Mattes_%2864%29.JPG/960px-N%C3%BCrnberg_%E2%80%94_GNM_2013-09-07_Mattes_%2864%29.JPG',
+  '25-2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Peter_Paul_Rubens_-_Raising_of_the_Cross_%28Antwerp_Cathedral%29.JPG/960px-Peter_Paul_Rubens_-_Raising_of_the_Cross_%28Antwerp_Cathedral%29.JPG',
+  '25-3': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Los_horrores_de_la_guerra.jpg/960px-Los_horrores_de_la_guerra.jpg',
+  '25-4': 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Flanders_exposition_at_the_Richelieu_wing_of_the_Louvre.jpg',
+  '25-5': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Portrait_de_Charles_1er%2C_roi_d%27Angleterre%2C_%C3%A0_la_chasse_-_Antoon_van_Dyck_-_Mus%C3%A9e_du_Louvre_Peintures_INV_1236_%3B_MR_666.jpg/960px-Portrait_de_Charles_1er%2C_roi_d%27Angleterre%2C_%C3%A0_la_chasse_-_Antoon_van_Dyck_-_Mus%C3%A9e_du_Louvre_Peintures_INV_1236_%3B_MR_666.jpg',
+  '25-6': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Vanitas_painting%2C_selfportrait_most_probably_Clara_Peeters.jpg/960px-Vanitas_painting%2C_selfportrait_most_probably_Clara_Peeters.jpg',
+  '25-7': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg/960px-Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg',
+  '25-8': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Spas_vsederzhitel_sinay_%28cropped1%29.jpg/960px-Spas_vsederzhitel_sinay_%28cropped1%29.jpg',
+  '25-9': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/After_Frans_Hals_-_Portrait_of_Frans_Hals_-_Indianapolis.jpg/960px-After_Frans_Hals_-_Portrait_of_Frans_Hals_-_Indianapolis.jpg',
+  '25-10': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Frans_Hals_-_De_regentessen_van_het_oudemannenhuis.jpg/960px-Frans_Hals_-_De_regentessen_van_het_oudemannenhuis.jpg',
+  '25-11': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Self-portrait_by_Judith_Leyster.jpg/960px-Self-portrait_by_Judith_Leyster.jpg',
+  '25-12': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg/960px-Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg',
+  '25-13': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg/960px-La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg',
+  '25-14': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg/960px-Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg',
+  '25-15': 'https://upload.wikimedia.org/wikipedia/commons/1/18/Rembrandtselfportraitweb.jpg',
+  '25-16': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Rembrandt_The_Hundred_Guilder_Print.jpg/960px-Rembrandt_The_Hundred_Guilder_Print.jpg',
+  '25-17': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Aelbert_Cuyp_-_Dordrecht_-_Kenwood.jpg/600px-Aelbert_Cuyp_-_Dordrecht_-_Kenwood.jpg',
+  '25-18': 'https://upload.wikimedia.org/wikipedia/commons/0/07/View_of_Haarlem_with_Bleaching_Grounds_c1665_Ruisdael.jpg',
+  '25-19': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Johannes_Vermeer_-_Woman_Holding_a_Balance_-_Google_Art_Project.jpg/960px-Johannes_Vermeer_-_Woman_Holding_a_Balance_-_Google_Art_Project.jpg',
+  '25-20': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Jan_Vermeer_-_The_Art_of_Painting_-_Google_Art_Project.jpg/960px-Jan_Vermeer_-_The_Art_of_Painting_-_Google_Art_Project.jpg',
+  '25-21': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Jan_Havicksz._Steen_%E2%80%93_Het_Sint-Nicolaasfeest_%E2%80%93_Google_Art_Project.jpg/960px-Jan_Havicksz._Steen_%E2%80%93_Het_Sint-Nicolaasfeest_%E2%80%93_Google_Art_Project.jpg',
+  '25-22': 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Willem_Kalf.jpg',
+  '25-23': 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Portrait_of_Rachel_Ruysch_by_Godfried_Schalcken.jpg',
+  '25-24': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Louis_XIV_of_France.jpg/960px-Louis_XIV_of_France.jpg',
+  '25-25': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/East_facade_of_the_Sully_Wing_2009-06-02.jpg/960px-East_facade_of_the_Sully_Wing_2009-06-02.jpg',
+  '25-26': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Versailles-Chateau-Jardins02.jpg/960px-Versailles-Chateau-Jardins02.jpg',
+  '25-27': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Chateau_Versailles_Galerie_des_Glaces.jpg/960px-Chateau_Versailles_Galerie_des_Glaces.jpg',
+  '25-28': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Vue_a%C3%A9rienne_du_domaine_de_Versailles_le_20_ao%C3%BBt_2014_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_22.jpg/960px-Vue_a%C3%A9rienne_du_domaine_de_Versailles_le_20_ao%C3%BBt_2014_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_22.jpg',
+  '25-29': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Versailles_Chapel_-_July_2006_edit.jpg/960px-Versailles_Chapel_-_July_2006_edit.jpg',
+  '25-30': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/H%C3%B4tel_des_Invalides_from_the_Eiffel_Tower%2C_23_July_2009.jpg/960px-H%C3%B4tel_des_Invalides_from_the_Eiffel_Tower%2C_23_July_2009.jpg',
+  '25-31': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Nicolas_Poussin_-_Et_in_Arcadia_ego_%28deuxi%C3%A8me_version%29.jpg/960px-Nicolas_Poussin_-_Et_in_Arcadia_ego_%28deuxi%C3%A8me_version%29.jpg',
+  '25-32': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Nicolas_Poussin_-_Landscape_with_Saint_John_on_Patmos_-_Google_Art_Project.jpg/960px-Nicolas_Poussin_-_Landscape_with_Saint_John_on_Patmos_-_Google_Art_Project.jpg',
+  '25-33': 'https://upload.wikimedia.org/wikipedia/commons/8/82/Claude_Gell%C3%A9e%2C_dit_le_Lorrain%2C_Self-portrait.jpg',
+  '25-34': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Louis_Le_Nain-_Happy_Family-_1642-_Louvre.jpg/960px-Louis_Le_Nain-_Happy_Family-_1642-_Louvre.jpg',
+  '25-35': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Hanging_from_The_Miseries_and_Misfortunes_of_War_by_Jacques_Callot.jpg/960px-Hanging_from_The_Miseries_and_Misfortunes_of_War_by_Jacques_Callot.jpg',
+  '25-36': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/L%27adoration_des_bergers.jpg/960px-L%27adoration_des_bergers.jpg',
+  '25-37': 'https://upload.wikimedia.org/wikipedia/commons/1/14/Banqueting_House_London.jpg',
+  '25-38': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/St_Pauls_aerial_%28cropped%29.jpg/960px-St_Pauls_aerial_%28cropped%29.jpg',
+};
+
 let currentIndex = 0;
 let filteredCards = [...artworks];
-let quizMode = 'show-image';
+let quizMode = 'show-title';
 
 const periodLabels = {
 'medieval': 'Late Medieval',
@@ -342,16 +515,26 @@ const front = document.getElementById('cardFront');
 const back = document.getElementById('cardBack');
 const tag = `<span class="period-tag ${periodClass[art.period]}">${periodLabels[art.period]}</span>`;
 
-if (quizMode === 'show-image') {
+const imgUrl = imageMap[art.fig] || '';
+const imgHtml = imgUrl ? '<div class="card-img-container"><img class="card-img" src="' + imgUrl + '" alt="' + art.title + '" loading="lazy"></div>' : '';
+
+if (quizMode === 'show-title') {
 front.innerHTML = `${tag}<h2>${art.title}</h2><p class="prompt">Who made this? When? What medium?</p><p class="hint">Fig. ${art.fig}</p><p class="click-hint">Click to reveal answer</p>`;
 } else if (quizMode === 'show-details') {
 front.innerHTML = `${tag}<p class="prompt"><strong>Artist:</strong> ${art.artist}<br><strong>Date:</strong> ${art.date}<br><strong>Medium:</strong> ${art.medium}<br><strong>Location:</strong> ${art.location}</p><p class="hint">What is the title of this work?</p><p class="click-hint">Click to reveal</p>`;
+} else if (quizMode === 'show-image-only') {
+if (imgUrl) {
+front.innerHTML = `<div class="card-img-container"><img class="card-img" src="${imgUrl}" alt="Artwork" loading="lazy" style="max-height:320px;"></div><p class="prompt" style="margin-top:15px;">What is this work?</p><p class="click-hint">Click to reveal</p>`;
+} else {
+front.innerHTML = `<h2 style="color:#666;">No image available</h2><p class="prompt">Fig. ${art.fig}</p><p class="click-hint">Click to reveal</p>`;
+}
 } else {
 front.innerHTML = `<h2>${art.title}</h2><p class="prompt">by ${art.artist}, ${art.date}</p><p class="hint">What period/style is this?</p><p class="click-hint">Click to reveal</p>`;
 }
 
 back.innerHTML = `
 <span class="period-tag ${periodClass[art.period]}">${periodLabels[art.period]}</span>
+${imgHtml}
 <h3>${art.artist}</h3>
 <div class="detail"><span>Title:</span> ${art.title}</div>
 <div class="detail"><span>Date:</span> ${art.date}</div>

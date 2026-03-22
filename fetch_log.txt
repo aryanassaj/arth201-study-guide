@@ -1,0 +1,167 @@
+[1/167] OK: Berlinghieri
+[2/167] OK: Cimabue
+[3/167] OK: Giotto
+[4/167] OK: Giotto
+[5/167] OK: Giotto
+[6/167] OK: Giotto
+[7/167] OK: Duccio
+[8/167] MISS: Duccio
+[9/167] OK: Simone Martini
+[10/167] OK: Pietro Lorenzetti
+[11/167] OK: Ambrogio Lorenzetti
+[12/167] OK: Claus Sluter
+[13/167] OK: Limbourg Brothers
+[14/167] OK: Robert Campin
+[15/167] OK: Jan van Eyck
+[16/167] OK: Jan van Eyck
+[17/167] OK: Jan van Eyck
+[18/167] OK: Rogier van der Weyden
+[19/167] OK: Rogier van der Weyden
+[20/167] OK: Dirk Bouts
+[21/167] OK: Hugo van der Goes
+[22/167] OK: Hans Memling
+[23/167] OK: Jean Fouquet
+[24/167] OK: Konrad Witz
+[25/167] OK: Veit Stoss
+[26/167] OK: Martin Schongauer
+[27/167] OK: Brunelleschi
+[28/167] OK: Ghiberti
+[29/167] OK: Donatello
+[30/167] OK: Donatello
+[31/167] OK: Donatello
+[32/167] OK: Ghiberti
+[33/167] OK: Donatello
+[34/167] OK: Verrocchio
+[35/167] OK: Pollaiuolo
+[36/167] OK: Donatello
+[37/167] OK: Verrocchio
+[38/167] OK: Gentile da Fabriano
+[39/167] OK: Masaccio
+[40/167] OK: Masaccio
+[41/167] OK: Masaccio
+[42/167] OK: Fra Angelico
+[43/167] OK: Andrea del Castagno
+[44/167] OK: Paolo Uccello
+[45/167] OK: Fra Filippo Lippi
+[46/167] OK: Piero della Francesca
+[47/167] OK: Ghirlandaio
+[48/167] OK: Botticelli
+[49/167] OK: Botticelli
+[50/167] OK: Perugino
+[51/167] OK: Signorelli
+[52/167] OK: Piero della Francesca
+[53/167] OK: Piero della Francesca
+[54/167] OK: Brunelleschi
+[55/167] OK: Brunelleschi
+[56/167] OK: Alberti
+[57/167] OK: Mantegna
+[58/167] OK: Mantegna
+[59/167] OK: Giovanni Bellini
+[60/167] OK: Leonardo
+[61/167] OK: Leonardo
+[62/167] ERROR: Leonardo - HTTP Error 429: Too many requests (f061ab2)
+[63/167] ERROR: Raphael - HTTP Error 429: Too many requests (f061ab2)
+[64/167] ERROR: Raphael - HTTP Error 429: Too many requests (f061ab2)
+[65/167] OK: Raphael
+[66/167] ERROR: Raphael - HTTP Error 429: Too many requests (f061ab2)
+[67/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[68/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[69/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[70/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[71/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[72/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[73/167] ERROR: Bramante - HTTP Error 429: Too many requests (f061ab2)
+[74/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[75/167] ERROR: Michelangelo - HTTP Error 429: Too many requests (f061ab2)
+[76/167] ERROR: Giovanni Bellini - HTTP Error 429: Too many requests (f061ab2)
+[77/167] ERROR: Giorgione - HTTP Error 429: Too many requests (f061ab2)
+[78/167] ERROR: Titian - HTTP Error 429: Too many requests (f061ab2)
+[79/167] OK: Titian
+[80/167] ERROR: Titian - HTTP Error 429: Too many requests (f061ab2)
+[81/167] OK: Correggio
+[82/167] ERROR: Pontormo - HTTP Error 429: Too many requests (f061ab2)
+[83/167] ERROR: Parmigianino - HTTP Error 429: Too many requests (f061ab2)
+[84/167] ERROR: Parmigianino - HTTP Error 429: Too many requests (f061ab2)
+[85/167] ERROR: Bronzino - HTTP Error 429: Too many requests (f061ab2)
+[86/167] ERROR: Bronzino - HTTP Error 429: Too many requests (f061ab2)
+[87/167] ERROR: Sofonisba Anguissola - HTTP Error 429: Too many requests (f061ab2)
+[88/167] ERROR: Tintoretto - HTTP Error 429: Too many requests (f061ab2)
+[89/167] ERROR: Veronese - HTTP Error 429: Too many requests (f061ab2)
+[90/167] OK: Cellini
+[91/167] ERROR: Giambologna - HTTP Error 429: Too many requests (f061ab2)
+[92/167] ERROR: Giulio Romano - HTTP Error 429: Too many requests (f061ab2)
+[93/167] ERROR: Palladio - HTTP Error 429: Too many requests (f061ab2)
+[94/167] ERROR: Palladio - HTTP Error 429: Too many requests (f061ab2)
+[95/167] ERROR: Vignola - HTTP Error 429: Too many requests (f061ab2)
+[96/167] ERROR: El Greco - HTTP Error 429: Too many requests (f061ab2)
+[97/167] ERROR: El Greco - HTTP Error 429: Too many requests (f061ab2)
+[98/167] ERROR: Dürer - HTTP Error 429: Too many requests (f061ab2)
+[99/167] ERROR: Dürer - HTTP Error 429: Too many requests (f061ab2)
+[100/167] ERROR: Dürer - HTTP Error 429: Too many requests (f061ab2)
+[101/167] ERROR: Dürer - HTTP Error 429: Too many requests (f061ab2)
+[102/167] ERROR: Grünewald - HTTP Error 429: Too many requests (f061ab2)
+[103/167] ERROR: Holbein - HTTP Error 429: Too many requests (f061ab2)
+[104/167] ERROR: Holbein - HTTP Error 429: Too many requests (f061ab2)
+[105/167] OK: Bruegel
+[106/167] OK: Maderno
+[107/167] ERROR: Maderno - HTTP Error 429: Too many requests (f061ab2)
+[108/167] OK: Bernini
+[109/167] ERROR: Bernini - HTTP Error 429: Too many requests (f061ab2)
+[110/167] ERROR: Bernini - HTTP Error 429: Too many requests (f061ab2)
+[111/167] OK: Bernini
+[112/167] ERROR: Bernini - HTTP Error 429: Too many requests (f061ab2)
+[113/167] ERROR: Borromini - HTTP Error 429: Too many requests (f061ab2)
+[114/167] ERROR: Borromini - HTTP Error 429: Too many requests (f061ab2)
+[115/167] MISS: Guarini
+[116/167] ERROR: Carracci - HTTP Error 429: Too many requests (f061ab2)
+[117/167] ERROR: Carracci - HTTP Error 429: Too many requests (f061ab2)
+[118/167] OK: Caravaggio
+[119/167] ERROR: Caravaggio - HTTP Error 429: Too many requests (f061ab2)
+[120/167] ERROR: Gentileschi - HTTP Error 429: Too many requests (f061ab2)
+[121/167] ERROR: Gentileschi - HTTP Error 429: Too many requests (f061ab2)
+[122/167] ERROR: Gaulli - HTTP Error 429: Too many requests (f061ab2)
+[123/167] MISS: Pozzo
+[124/167] ERROR: Ribera - HTTP Error 429: Too many requests (f061ab2)
+[125/167] ERROR: Zurbarán - HTTP Error 429: Too many requests (f061ab2)
+[126/167] ERROR: Velázquez - HTTP Error 429: Too many requests (f061ab2)
+[127/167] ERROR: Velázquez - HTTP Error 429: Too many requests (f061ab2)
+[128/167] ERROR: Velázquez - HTTP Error 429: Too many requests (f061ab2)
+[129/167] ERROR: Murillo - HTTP Error 429: Too many requests (f061ab2)
+[130/167] ERROR: Claesz - HTTP Error 429: Too many requests (f061ab2)
+[131/167] ERROR: Rubens - HTTP Error 429: Too many requests (f061ab2)
+[132/167] ERROR: Rubens - HTTP Error 429: Too many requests (f061ab2)
+[133/167] ERROR: Rubens - HTTP Error 429: Too many requests (f061ab2)
+[134/167] ERROR: Van Dyck - HTTP Error 429: Too many requests (f061ab2)
+[135/167] ERROR: Peeters - HTTP Error 429: Too many requests (f061ab2)
+[136/167] ERROR: Ter Brugghen - HTTP Error 429: Too many requests (f061ab2)
+[137/167] ERROR: Honthorst - HTTP Error 429: Too many requests (f061ab2)
+[138/167] ERROR: Hals - HTTP Error 429: Too many requests (f061ab2)
+[139/167] ERROR: Hals - HTTP Error 429: Too many requests (f061ab2)
+[140/167] OK: Leyster
+[141/167] ERROR: Rembrandt - HTTP Error 429: Too many requests (f061ab2)
+[142/167] ERROR: Rembrandt - HTTP Error 429: Too many requests (f061ab2)
+[143/167] ERROR: Rembrandt - HTTP Error 429: Too many requests (f061ab2)
+[144/167] ERROR: Rembrandt - HTTP Error 429: Too many requests (f061ab2)
+[145/167] ERROR: Rembrandt - HTTP Error 429: Too many requests (f061ab2)
+[146/167] ERROR: Cuyp - The read operation timed out
+[147/167] OK: Ruisdael
+[148/167] OK: Vermeer
+[149/167] OK: Vermeer
+[150/167] OK: Steen
+[151/167] OK: Kalf
+[152/167] ERROR: Ruysch - HTTP Error 429: Too many requests (f061ab2)
+[153/167] OK: Rigaud
+[154/167] OK: Poussin
+[155/167] OK: Poussin
+[156/167] OK: Claude Lorrain
+[157/167] OK: Le Nain
+[158/167] ERROR: Callot - HTTP Error 429: Too many requests (f061ab2)
+[159/167] ERROR: La Tour - HTTP Error 429: Too many requests (f061ab2)
+[160/167] OK: Inigo Jones
+[161/167] ERROR: Wren - HTTP Error 429: Too many requests (f061ab2)
+[162/167] ERROR: Versailles - HTTP Error 429: Too many requests (f061ab2)
+[163/167] OK: Hall of Mirrors
+[164/167] OK: Girardon
+[165/167] ERROR: Hardouin-Mansart - HTTP Error 429: Too many requests (f061ab2)
+[166/167] ERROR: Louvre - HTTP Error 429: Too many requests (f061ab2)
+[167/167] ERROR: Versailles Chapel - HTTP Error 429: Too many requests (f061ab2)
